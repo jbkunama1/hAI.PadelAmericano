@@ -3,6 +3,10 @@
 > Smart tournament manager for **Padel Americano** – built for clubs, schools and Friday-night padel addicts.
 
 <p align="center">
+  <img src="hai-padel-banner.png" alt="hAI Padel Americano Banner" width="800" />
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/padel-americano-22c55e?style=for-the-badge&logo=google-forms&logoColor=ffffff" alt="Padel Americano" />
   <img src="https://img.shields.io/badge/status-prototype-blue?style=for-the-badge" alt="Status Prototype" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT License" />
