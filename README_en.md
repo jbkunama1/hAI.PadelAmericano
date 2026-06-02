@@ -68,7 +68,7 @@ hAI.PadelAmericano/
 ├── index.html      # Single-page app (SPA) – UI + logic
 ├── README.md       # README (Deutsch)
 ├── README_en.md    # README (English)
-├── LICENSE_PLACEHOLDER_MIT
+├── LICENSE
 └── .gitignore
 ```
 
@@ -100,4 +100,4 @@ Scheduling is heuristic: it aims for a fair mix of partners and opponents, not a
 
 This project is intended to be licensed under the **MIT License**, a widely used permissive open source license. It allows reuse, modification and distribution with minimal restrictions as long as copyright notice and license text remain. [web:46][web:47][web:50][web:53][web:56][web:59]
 
-> ⚠️ For legal correctness, copy the official MIT license text from a trusted source (for example *choosealicense.com*) into the `LICENSE_PLACEHOLDER_MIT` file or replace it with a proper `LICENSE` file.
+The full license text is available in the `LICENSE` file.
