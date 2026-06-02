@@ -17,11 +17,13 @@
     .pill-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
     .pill{border-radius:999px;border:1px solid rgba(148,163,184,.5);padding:.2rem .6rem;font-size:.75rem;display:inline-flex;align-items:center;gap:.3rem;background:#020617}
     .pill span{font-size:.9rem}
-    .lang-switch{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;font-size:.8rem}
-    .lang-switch a{color:#9ca3af;text-decoration:none;padding:.15rem .5rem;border-radius:999px;border:1px solid transparent}
-    .lang-switch a.active{border-color:#22c55e;color:#bbf7d0;background:rgba(34,197,94,.12)}
     .hero-banner{border-radius:1rem;overflow:hidden;border:1px solid #1f2937;background:#020617}
     .hero-banner img{display:block;width:100%;height:auto}
+    .header-meta{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .lang-switch{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;font-size:.8rem}
+    .lang-switch a{color:#9ca3af;text-decoration:none;padding:.15rem .5rem;border-radius:999px;border:1px solid transparent}
+    .lang-switch a.active{border-color:#22c55e;color:#bbf7d0;background:rgba(34,197,94,.12)}
+    .theme-toggle{font-size:.8rem;padding:.25rem .7rem}
     .layout{display:grid;grid-template-columns:minmax(0,1.2fr)minmax(0,1fr);gap:1rem}
     @media(max-width:900px){.layout{grid-template-columns:1fr}}
     .card{background:#020617;border-radius:.9rem;border:1px solid #1f2937;box-shadow:0 18px 40px rgba(15,23,42,.8);padding:1rem}
@@ -68,6 +70,15 @@
     .monitor-body{display:grid;grid-template-columns:minmax(0,1.2fr)minmax(0,1fr);gap:.6rem;flex:1}
     .monitor-card{border-radius:.7rem;border:1px solid #1f2937;padding:.5rem .6rem;overflow:auto}
     @media(max-width:800px){.monitor-body{grid-template-columns:1fr}}
+
+    /* Light theme overrides */
+    body.light{background:#f3f4f6;color:#020617}
+    body.light .card,body.light .monitor-card,body.light .hero-banner{background:#ffffff;border-color:#d1d5db;box-shadow:0 10px 25px rgba(15,23,42,.1)}
+    body.light .pill{background:#f3f4f6;border-color:#d1d5db}
+    body.light .monitor{background:rgba(15,23,42,.1);color:#020617}
+    body.light .monitor-btn{background:#ffffff;color:#111827;border-color:#d1d5db}
+    body.light .empty{border-color:#d1d5db;color:#4b5563}
+    body.light .subtitle{color:#4b5563}
   </style>
 </head>
 <body>
@@ -87,10 +98,13 @@
         <img src="hai-padel-banner.png" alt="hAI Padel Americano Banner" />
       </div>
     </div>
-    <div class="lang-switch" aria-label="Sprache der README">
-      <span>README:</span>
-      <a href="README.md" class="active">Deutsch</a>
-      <a href="README_en.md">English</a>
+    <div class="header-meta">
+      <div class="lang-switch" aria-label="Sprache der README">
+        <span>README:</span>
+        <a href="README.md" class="active">Deutsch</a>
+        <a href="README_en.md">English</a>
+      </div>
+      <button class="btn-ghost theme-toggle" id="themeToggle" type="button">☀️ Hell</button>
     </div>
   </header>
 
@@ -103,12 +117,28 @@
           <input id="tName" type="text" placeholder="z. B. Friday Night Americano" />
         </div>
         <div class="field">
-          <label for="points">Punkte pro Match</label>
+          <label for="mode">Modus</label>
+          <select id="mode">
+            <option value="points" selected>Punkte bis Ziel</option>
+            <option value="free">Punkte (ohne Vorgabe)</option>
+            <option value="time">Zeitbasiert</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="points">Punkte pro Match (bei Punkte-Ziel)</label>
           <select id="points">
             <option value="16">16</option>
             <option value="20">20</option>
             <option value="24" selected>24</option>
             <option value="32">32</option>
+          </select>
+        </div>
+        <div class="field" id="timeField">
+          <label for="timePerMatch">Zeit pro Match (Minuten, bei Zeitmodus)</label>
+          <select id="timePerMatch">
+            <option value="15">15</option>
+            <option value="19">19</option>
+            <option value="20" selected>20</option>
           </select>
         </div>
         <div class="field">
@@ -196,10 +226,14 @@ Daria
   </footer>
 
   <script>
-    const state={name:'',points:24,roundsCount:5,players:[],rounds:[]};
+    const THEME_KEY='hai_padel_theme';
+    const state={name:'',points:24,roundsCount:5,players:[],rounds:[],mode:'points',timePerMatch:20};
     const els={
       tName:document.getElementById('tName'),
+      mode:document.getElementById('mode'),
       points:document.getElementById('points'),
+      timePerMatch:document.getElementById('timePerMatch'),
+      timeField:document.getElementById('timeField'),
       rounds:document.getElementById('rounds'),
       players:document.getElementById('players'),
       generateBtn:document.getElementById('generateBtn'),
@@ -221,7 +255,8 @@ Daria
       monitorClose:document.getElementById('monitorClose'),
       monitorTitle:document.getElementById('monitorTitle'),
       monitorMatches:document.getElementById('monitorMatches'),
-      monitorLeaderboard:document.getElementById('monitorLeaderboard')
+      monitorLeaderboard:document.getElementById('monitorLeaderboard'),
+      themeToggle:document.getElementById('themeToggle')
     };
 
     function parseNames(raw){return raw.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);}
@@ -230,9 +265,9 @@ Daria
 
     function genRounds(ids,count){const rounds=[];for(let r=1;r<=count;r++){const pool=shuffle(ids);const round={index:r,matches:[],byeIds:[]};if(pool.length%4!==0)round.byeIds.push(pool.pop());while(pool.length>=4){const a=pool.shift(),b=pool.shift(),c=pool.shift(),d=pool.shift();round.matches.push({court:round.matches.length+1,teamA:[a,b],teamB:[c,d],scoreA:'',scoreB:''});}rounds.push(round);}return rounds;}
 
-    function buildTournament(){const names=parseNames(els.players.value);if(names.length<4){alert('Bitte mindestens 4 Teilnehmer eintragen.');return;}state.name=els.tName.value.trim()||'Padel Americano';state.points=Number(els.points.value)||24;state.roundsCount=Math.max(1,Number(els.rounds.value)||5);state.players=createPlayers(names);const ids=state.players.map(p=>p.id);state.rounds=genRounds(ids,state.roundsCount);recalc();renderAll();}
+    function buildTournament(){const names=parseNames(els.players.value);if(names.length<4){alert('Bitte mindestens 4 Teilnehmer eintragen.');return;}state.name=els.tName.value.trim()||'Padel Americano';state.mode=els.mode.value||'points';state.points=Number(els.points.value)||24;state.timePerMatch=Number(els.timePerMatch.value)||20;state.roundsCount=Math.max(1,Number(els.rounds.value)||5);state.players=createPlayers(names);const ids=state.players.map(p=>p.id);state.rounds=genRounds(ids,state.roundsCount);recalc();renderAll();}
 
-    function resetAll(){if(!confirm('Alles zurücksetzen?'))return;state.name='';state.points=24;state.roundsCount=5;state.players=[];state.rounds=[];els.tName.value='';els.points.value='24';els.rounds.value='5';els.players.value='';renderAll();}
+    function resetAll(){if(!confirm('Alles zurücksetzen?'))return;state.name='';state.mode='points';state.points=24;state.timePerMatch=20;state.roundsCount=5;state.players=[];state.rounds=[];els.tName.value='';els.mode.value='points';els.points.value='24';els.timePerMatch.value='20';els.rounds.value='5';els.players.value='';updateModeUi();renderAll();}
 
     function recalc(){state.players.forEach(p=>{p.matches=0;p.pointsFor=0;p.pointsAgainst=0;p.diff=0;});state.rounds.forEach(round=>{round.matches.forEach(m=>{const a=Number(m.scoreA),b=Number(m.scoreB);if(!Number.isFinite(a)||!Number.isFinite(b))return;[...m.teamA,...m.teamB].forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl)pl.matches++;});m.teamA.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=a;pl.pointsAgainst+=b;}});m.teamB.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=b;pl.pointsAgainst+=a;}});});});state.players.forEach(p=>{p.diff=p.pointsFor-p.pointsAgainst;});}
 
@@ -240,16 +275,18 @@ Daria
 
     function playerName(id){return state.players.find(p=>p.id===id)?.name||'n/a';}
 
-    function renderPlayers(){if(!state.players.length){els.playersInfo.textContent='Noch kein Turnier erzeugt.';els.playersGrid.innerHTML='<div class="empty">Nach der Erstellung erscheinen hier alle Teilnehmer.</div>';return;}els.playersInfo.textContent=`${state.players.length} Spieler · ${state.rounds.length} Runden · ${state.points} Punkte`;els.playersGrid.innerHTML=state.players.map(p=>`<div class="player-chip"><span>${escapeHtml(p.name)}</span><span>${p.matches} Sp.</span></div>`).join('');}
+    function renderPlayers(){if(!state.players.length){els.playersInfo.textContent='Noch kein Turnier erzeugt.';els.playersGrid.innerHTML='<div class="empty">Nach der Erstellung erscheinen hier alle Teilnehmer.</div>';return;}els.playersInfo.textContent=`${state.players.length} Spieler · ${state.rounds.length} Runden · ${state.mode==='time'?state.timePerMatch+' min':state.mode==='points'?state.points+' Punkte':'freie Punkte'}`;els.playersGrid.innerHTML=state.players.map(p=>`<div class="player-chip"><span>${escapeHtml(p.name)}</span><span>${p.matches} Sp.</span></div>`).join('');}
 
     function sortedPlayers(){return[...state.players].sort((a,b)=>b.pointsFor-a.pointsFor||b.diff-a.diff||a.name.localeCompare(b.name));}
 
     function renderLeaderboard(){if(!state.players.length){els.leaderboard.innerHTML='<div class="empty">Sobald Ergebnisse eingetragen sind, erscheint hier die Rangliste.</div>';return;}const rows=sortedPlayers().map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.matches}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.leaderboard.innerHTML=`<table><thead><tr><th>#</th><th>Spieler</th><th>Spiele</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`;}
 
-    function renderSchedule(){if(!state.rounds.length){els.schedule.innerHTML='<div class="empty">Erzeuge zuerst einen Spielplan über "Americano generieren".</div>';return;}els.schedule.innerHTML=state.rounds.map(round=>{const matches=round.matches.map((m,i)=>`<div class="match" data-r="${round.index-1}" data-i="${i}"><div class="match-top"><span>Runde ${round.index} · Platz ${m.court}</span><span>${state.points} Punkte</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(m.teamA[0]))}</span><span>${escapeHtml(playerName(m.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${m.scoreA===''&&m.scoreB===''?'– : –':`${m.scoreA||0} : ${m.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(m.teamB[0]))}</span><span>${escapeHtml(playerName(m.teamB[1]))}</span></div></div><div class="score-inputs"><input type="number" min="0" max="${state.points}" value="${m.scoreA}" data-team="A" /><input type="number" min="0" max="${state.points}" value="${m.scoreB}" data-team="B" /><button type="button" class="btn-ghost" style="padding:.2rem .5rem;font-size:.7rem">Auto</button></div></div>`).join('');const bye=round.byeIds&&round.byeIds.length?`<div class="empty" style="margin-bottom:.35rem">Pause: ${round.byeIds.map(playerName).map(escapeHtml).join(', ')}</div>`:'';return`<section class="schedule-round">${bye}<div class="match-grid">${matches}</div></section>`;}).join('');
-      els.schedule.querySelectorAll('.match').forEach(card=>{const r=Number(card.dataset.r),i=Number(card.dataset.i);const inputs=card.querySelectorAll('input');const auto=card.querySelector('button');inputs.forEach(inp=>{inp.addEventListener('input',()=>{const t=inp.dataset.team;const val=inp.value===''?'':Number(inp.value);const m=state.rounds[r].matches[i];if(t==='A')m.scoreA=val;else m.scoreB=val;recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});});auto.addEventListener('click',()=>{const m=state.rounds[r].matches[i];const a=Number(m.scoreA),b=Number(m.scoreB);if(Number.isFinite(a)&&!Number.isFinite(b))m.scoreB=Math.max(0,state.points-a);else if(Number.isFinite(b)&&!Number.isFinite(a))m.scoreA=Math.max(0,state.points-b);else alert('Bitte zunächst Punkte für Team A oder B eintragen.');recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});});}
+    function matchMeta(){if(state.mode==='points')return state.points+' Punkte';if(state.mode==='time')return state.timePerMatch+' min';return 'freie Punkte';}
 
-    function renderMonitor(){els.monitorTitle.textContent=state.name||'Padel Americano';const all=[];state.rounds.forEach(round=>{round.matches.forEach(m=>{const done=m.scoreA!==''&&m.scoreB!=='';all.push({round:round.index,match:m,done});});});const upcoming=all.filter(x=>!x.done).slice(0,10);if(!upcoming.length){els.monitorMatches.innerHTML='<div class="empty">Alle Matches sind eingetragen.</div>';}else{els.monitorMatches.innerHTML=upcoming.map(x=>`<div class="match" style="margin-bottom:.3rem"><div class="match-top"><span>Runde ${x.round} · Platz ${x.match.court}</span><span>${state.points} Punkte</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(x.match.teamA[0]))}</span><span>${escapeHtml(playerName(x.match.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${x.match.scoreA===''&&x.match.scoreB===''?'– : –':`${x.match.scoreA||0} : ${x.match.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(x.match.teamB[0]))}</span><span>${escapeHtml(playerName(x.match.teamB[1]))}</span></div></div></div>`).join('');}
+    function renderSchedule(){if(!state.rounds.length){els.schedule.innerHTML='<div class="empty">Erzeuge zuerst einen Spielplan über "Americano generieren".</div>';return;}const maxAttr=state.mode==='points'?state.points:'';const autoHtml=state.mode==='points'?'<button type="button" class="btn-ghost" style="padding:.2rem .5rem;font-size:.7rem">Auto</button>':'';els.schedule.innerHTML=state.rounds.map(round=>{const matches=round.matches.map((m,i)=>`<div class="match" data-r="${round.index-1}" data-i="${i}"><div class="match-top"><span>Runde ${round.index} · Platz ${m.court}</span><span>${matchMeta()}</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(m.teamA[0]))}</span><span>${escapeHtml(playerName(m.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${m.scoreA===''&&m.scoreB===''?'– : –':`${m.scoreA||0} : ${m.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(m.teamB[0]))}</span><span>${escapeHtml(playerName(m.teamB[1]))}</span></div></div><div class="score-inputs"><input type="number" min="0" max="${maxAttr}" value="${m.scoreA}" data-team="A" /><input type="number" min="0" max="${maxAttr}" value="${m.scoreB}" data-team="B" />${autoHtml}</div></div>`).join('');const bye=round.byeIds&&round.byeIds.length?`<div class="empty" style="margin-bottom:.35rem">Pause: ${round.byeIds.map(playerName).map(escapeHtml).join(', ')}</div>`:'';return`<section class="schedule-round">${bye}<div class="match-grid">${matches}</div></section>`;}).join('');
+      els.schedule.querySelectorAll('.match').forEach(card=>{const r=Number(card.dataset.r),i=Number(card.dataset.i);const inputs=card.querySelectorAll('input');const auto=card.querySelector('.score-inputs button');inputs.forEach(inp=>{inp.addEventListener('input',()=>{const t=inp.dataset.team;const val=inp.value===''?'':Number(inp.value);const m=state.rounds[r].matches[i];if(t==='A')m.scoreA=val;else m.scoreB=val;recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});});if(auto){auto.addEventListener('click',()=>{if(state.mode!=='points'){alert('Auto-Verteilung ist nur im Modus "Punkte bis Ziel" verfügbar.');return;}const m=state.rounds[r].matches[i];const a=Number(m.scoreA),b=Number(m.scoreB);if(Number.isFinite(a)&&!Number.isFinite(b))m.scoreB=Math.max(0,state.points-a);else if(Number.isFinite(b)&&!Number.isFinite(a))m.scoreA=Math.max(0,state.points-b);else alert('Bitte zunächst Punkte für Team A oder B eintragen.');recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});}});}
+
+    function renderMonitor(){els.monitorTitle.textContent=state.name||'Padel Americano';const all=[];state.rounds.forEach(round=>{round.matches.forEach(m=>{const done=m.scoreA!==''&&m.scoreB!=='';all.push({round:round.index,match:m,done});});});const upcoming=all.filter(x=>!x.done).slice(0,10);if(!upcoming.length){els.monitorMatches.innerHTML='<div class="empty">Alle Matches sind eingetragen.</div>';}else{els.monitorMatches.innerHTML=upcoming.map(x=>`<div class="match" style="margin-bottom:.3rem"><div class="match-top"><span>Runde ${x.round} · Platz ${x.match.court}</span><span>${matchMeta()}</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(x.match.teamA[0]))}</span><span>${escapeHtml(playerName(x.match.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${x.match.scoreA===''&&x.match.scoreB===''?'– : –':`${x.match.scoreA||0} : ${x.match.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(x.match.teamB[0]))}</span><span>${escapeHtml(playerName(x.match.teamB[1]))}</span></div></div></div>`).join('');}
       const rows=sortedPlayers().slice(0,12).map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.monitorLeaderboard.innerHTML=rows?`<table><thead><tr><th>#</th><th>Spieler</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">Noch keine Spieler.</div>';}
 
     function renderAll(){renderStats();renderPlayers();renderLeaderboard();renderSchedule();renderMonitor();}
@@ -259,9 +296,17 @@ Daria
 
     function doExport(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=(state.name||'padel-americano').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.json';a.click();URL.revokeObjectURL(url);}
 
-    function doImport(file){const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);Object.assign(state,{name:data.name||'Padel Americano',points:Number(data.points||24),roundsCount:Number(data.roundsCount||data.rounds?.length||5),players:data.players||[],rounds:data.rounds||[]});els.tName.value=state.name;els.points.value=String(state.points);els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');recalc();renderAll();}catch(e){alert('JSON konnte nicht gelesen werden.');}};reader.readAsText(file);}
+    function doImport(file){const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);Object.assign(state,{name:data.name||'Padel Americano',points:Number(data.points||24),roundsCount:Number(data.roundsCount||data.rounds?.length||5),players:data.players||[],rounds:data.rounds||[]});state.mode=data.mode||'points';state.timePerMatch=Number(data.timePerMatch||20);els.tName.value=state.name;els.points.value=String(state.points);els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');els.mode.value=state.mode;els.timePerMatch.value=String(state.timePerMatch);updateModeUi();recalc();renderAll();}catch(e){alert('JSON konnte nicht gelesen werden.');}};reader.readAsText(file);}
 
-    function loadDemo(){els.tName.value='Friday Night Demo';els.points.value='24';els.rounds.value='5';els.players.value=['Anna','Ben','Chris','Daria','Emir','Fiona','Gustav','Hanna'].join('\n');buildTournament();if(state.rounds[0]?.matches[0]){state.rounds[0].matches[0].scoreA=14;state.rounds[0].matches[0].scoreB=10;}if(state.rounds[0]?.matches[1]){state.rounds[0].matches[1].scoreA=11;state.rounds[0].matches[1].scoreB=13;}recalc();renderAll();}
+    function loadDemo(){els.tName.value='Friday Night Demo';els.mode.value='points';els.points.value='24';els.timePerMatch.value='20';els.rounds.value='5';els.players.value=['Anna','Ben','Chris','Daria','Emir','Fiona','Gustav','Hanna'].join('\n');updateModeUi();buildTournament();if(state.rounds[0]?.matches[0]){state.rounds[0].matches[0].scoreA=14;state.rounds[0].matches[0].scoreB=10;}if(state.rounds[0]?.matches[1]){state.rounds[0].matches[1].scoreA=11;state.rounds[0].matches[1].scoreB=13;}recalc();renderAll();}
+
+    function updateModeUi(){if(els.timeField){els.timeField.style.display=els.mode.value==='time'?'block':'none';}}
+
+    function applyTheme(theme){const t=theme==='light'?'light':'dark';document.body.classList.toggle('light',t==='light');localStorage.setItem(THEME_KEY,t);if(els.themeToggle){els.themeToggle.textContent=t==='light'?'🌙 Dunkel':'☀️ Hell';}}
+
+    (function initTheme(){const stored=localStorage.getItem(THEME_KEY);const prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches;const initial=stored|| (prefers?'light':'dark');applyTheme(initial);}());
+
+    els.themeToggle.addEventListener('click',()=>{const current=document.body.classList.contains('light')?'light':'dark';applyTheme(current==='light'?'dark':'light');});
 
     els.generateBtn.addEventListener('click',buildTournament);
     els.resetBtn.addEventListener('click',resetAll);
@@ -269,11 +314,13 @@ Daria
     els.importBtn.addEventListener('click',()=>els.fileInput.click());
     els.fileInput.addEventListener('change',e=>{if(e.target.files[0])doImport(e.target.files[0]);});
     els.demoBtn.addEventListener('click',loadDemo);
+    els.mode.addEventListener('change',updateModeUi);
 
     els.monitorToggle.addEventListener('click',()=>{els.monitor.classList.add('active');});
     els.monitorClose.addEventListener('click',()=>{els.monitor.classList.remove('active');});
     document.addEventListener('keydown',e=>{if(e.key==='Escape')els.monitor.classList.remove('active');});
 
+    updateModeUi();
     renderAll();
   </script>
 </body>
