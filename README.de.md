@@ -62,7 +62,7 @@ hAI.PadelAmericano/
 ├── index.html      # Web-App (UI + Logik)
 ├── README.md       # README (Englisch)
 ├── README.de.md    # README (Deutsch)
-├── LICENSE_PLACEHOLDER_MIT
+├── LICENSE
 └── .gitignore
 ```
 
@@ -84,4 +84,4 @@ Die Auslosung ist heuristisch – sie versucht eine faire Durchmischung, garanti
 
 Dieses Projekt soll unter der **MIT-Lizenz** veröffentlicht werden. Die MIT-Lizenz ist eine sehr freizügige Open-Source-Lizenz, die die Nutzung, Veränderung und Weitergabe des Codes mit wenigen Auflagen erlaubt – wichtig ist vor allem, dass Urheberrechtshinweis und Lizenztext erhalten bleiben. [web:46][web:47][web:50][web:53][web:56][web:59]
 
-> ⚠️ Für eine rechtlich saubere Nutzung kopiere bitte den offiziellen MIT-Lizenztext (z. B. von *choosealicense.com*) in die Datei `LICENSE_PLACEHOLDER_MIT` oder ersetze sie durch eine Datei `LICENSE` mit dem vollständigen Text.
+Der vollständige Lizenztext befindet sich in der Datei `LICENSE`.
