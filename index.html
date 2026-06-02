@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hAI Padel Americano</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#020617;color:#e5e7eb;min-height:100vh;display:flex;flex-direction:column}
+    header,main,footer{max-width:1100px;width:100%;margin:0 auto;padding:1rem 1.25rem}
+    header{padding-top:1.25rem}
+    h1{margin:0 0 .35rem;font-size:1.8rem;letter-spacing:-.03em}
+    h1 span{color:#22c55e}
+    .subtitle{margin:.1rem 0 .6rem;color:#9ca3af;font-size:.9rem}
+    .pill-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+    .pill{border-radius:999px;border:1px solid rgba(148,163,184,.5);padding:.2rem .6rem;font-size:.75rem;display:inline-flex;align-items:center;gap:.3rem;background:#020617}
+    .pill span{font-size:.9rem}
+    .layout{display:grid;grid-template-columns:minmax(0,1.2fr)minmax(0,1fr);gap:1rem}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}}
+    .card{background:#020617;border-radius:.9rem;border:1px solid #1f2937;box-shadow:0 18px 40px rgba(15,23,42,.8);padding:1rem}
+    h2{margin:.1rem 0 .6rem;font-size:1rem}
+    label{display:block;font-size:.8rem;margin-bottom:.15rem}
+    input,textarea,select{width:100%;border-radius:.6rem;border:1px solid #374151;background:#020617;color:#e5e7eb;padding:.5rem .6rem;font-family:inherit;font-size:.9rem}
+    textarea{min-height:120px;resize:vertical}
+    .field{margin-bottom:.6rem}
+    .btn-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem}
+    button{border-radius:999px;border:1px solid transparent;padding:.45rem .85rem;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:.3rem}
+    .btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#022c22}
+    .btn-ghost{background:#020617;border-color:#4b5563;color:#e5e7eb}
+    .btn-danger{background:rgba(248,113,113,.1);border-color:#fecaca;color:#fecaca}
+    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin-top:.6rem}
+    .stat{border-radius:.6rem;border:1px solid #1f2937;padding:.45rem .55rem;font-size:.8rem}
+    .stat span:first-child{display:block;color:#9ca3af;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+    .stat strong{display:block;margin-top:.1rem}
+    .section-header{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.4rem}
+    .section-header span{font-size:.8rem;color:#9ca3af}
+    .players-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.4rem}
+    .player-chip{border-radius:.7rem;border:1px solid #1f2937;padding:.4rem .5rem;font-size:.8rem;display:flex;justify-content:space-between;align-items:center}
+    .player-chip span:last-child{color:#a5b4fc;font-size:.75rem}
+    .empty{border-radius:.7rem;border:1px dashed #4b5563;padding:.6rem .55rem;font-size:.8rem;color:#9ca3af}
+    table{width:100%;border-collapse:collapse;font-size:.8rem}
+    th,td{padding:.35rem .4rem;border-bottom:1px solid #1f2937;text-align:left}
+    th{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af}
+    .rank{display:inline-block;min-width:1.4rem;text-align:center;border-radius:999px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.7);color:#bbf7d0;font-size:.7rem}
+    .schedule-round{margin-bottom:.6rem}
+    .match-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.4rem}
+    .match{border-radius:.7rem;border:1px solid #1f2937;padding:.4rem .5rem;font-size:.8rem}
+    .match-top{display:flex;justify-content:space-between;align-items:center;color:#9ca3af;margin-bottom:.2rem}
+    .teams{display:flex;justify-content:space-between;gap:.4rem}
+    .team span{display:block}
+    .score{font-weight:700;text-align:center;margin:.25rem 0}
+    .score-inputs{display:flex;gap:.3rem;align-items:center;margin-top:.2rem}
+    .score-inputs input{width:3rem;text-align:center;padding-inline:.2rem}
+    footer{padding-bottom:1rem;font-size:.75rem;color:#6b7280}
+    .monitor-toggle{position:fixed;right:1rem;bottom:1rem}
+    .monitor-btn{border-radius:999px;border:1px solid #4b5563;background:#020617;color:#e5e7eb;padding:.4rem .75rem;font-size:.8rem;display:inline-flex;align-items:center;gap:.35rem;box-shadow:0 10px 30px rgba(15,23,42,.9)}
+    .dot{width:.45rem;height:.45rem;border-radius:999px;background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.2)}
+    .monitor{position:fixed;inset:0;background:#020617;display:none;flex-direction:column;padding:1rem;color:#e5e7eb}
+    .monitor.active{display:flex}
+    .monitor-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+    .monitor-body{display:grid;grid-template-columns:minmax(0,1.2fr)minmax(0,1fr);gap:.6rem;flex:1}
+    .monitor-card{border-radius:.7rem;border:1px solid #1f2937;padding:.5rem .6rem;overflow:auto}
+    @media(max-width:800px){.monitor-body{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>hAI <span>Padel Americano</span></h1>
+    <p class="subtitle">Teilnehmer eintragen, Americano-Runden generieren, Ergebnisse erfassen und die Rangliste live auf einem Monitor anzeigen.</p>
+    <div class="pill-row">
+      <div class="pill"><span>🎾</span><span>Americano Manager</span></div>
+      <div class="pill"><span>🧮</span><span>Live-Rangliste</span></div>
+      <div class="pill"><span>🖥️</span><span>Monitor-Modus</span></div>
+      <div class="pill"><span>💾</span><span>JSON Import/Export</span></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section>
+      <article class="card">
+        <h2>Turnier konfigurieren</h2>
+        <div class="field">
+          <label for="tName">Turniername</label>
+          <input id="tName" type="text" placeholder="z. B. Friday Night Americano" />
+        </div>
+        <div class="field">
+          <label for="points">Punkte pro Match</label>
+          <select id="points">
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="24" selected>24</option>
+            <option value="32">32</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="rounds">Anzahl Runden</label>
+          <input id="rounds" type="number" min="1" max="12" value="5" />
+        </div>
+        <div class="field">
+          <label for="players">Teilnehmer (ein Name pro Zeile)</label>
+          <textarea id="players" placeholder="Anna
+Ben
+Chris
+Daria
+…"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" id="generateBtn">🎲 Americano generieren</button>
+          <button class="btn-ghost" id="demoBtn">⚡ Demo laden</button>
+          <button class="btn-ghost" id="exportBtn">📤 JSON export</button>
+          <button class="btn-ghost" id="importBtn">📥 JSON import</button>
+          <button class="btn-danger" id="resetBtn">🧹 Zurücksetzen</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>Teilnehmer</span><strong id="statPlayers">0</strong></div>
+          <div class="stat"><span>Runden</span><strong id="statRounds">0</strong></div>
+          <div class="stat"><span>Matches</span><strong id="statMatches">0</strong></div>
+          <div class="stat"><span>Offene Spiele</span><strong id="statOpen">0</strong></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-header">
+          <h2>Teilnehmer</h2>
+          <span id="playersInfo">Noch kein Turnier erzeugt.</span>
+        </div>
+        <div id="playersGrid" class="players-grid"></div>
+      </article>
+    </section>
+
+    <section>
+      <article class="card">
+        <div class="section-header">
+          <h2>Rangliste</h2>
+          <span>Einzelwertung nach Punkten</span>
+        </div>
+        <div id="leaderboard"></div>
+      </article>
+      <article class="card">
+        <div class="section-header">
+          <h2>Spielplan & Ergebnisse</h2>
+          <span>Americano-Doppel mit Einzelwertung</span>
+        </div>
+        <div id="schedule"></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="monitor-toggle">
+    <button class="monitor-btn" id="monitorToggle"><span class="dot"></span><span>Monitor-Modus</span></button>
+  </div>
+
+  <div class="monitor" id="monitor">
+    <div class="monitor-header">
+      <div>
+        <div style="font-size:.75rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.12em">Padel Americano</div>
+        <div id="monitorTitle" style="font-size:1.25rem;font-weight:600;margin-top:.1rem">Turnier</div>
+      </div>
+      <button class="btn-ghost" id="monitorClose">Zurück</button>
+    </div>
+    <div class="monitor-body">
+      <section class="monitor-card">
+        <h2 style="font-size:.9rem;margin:.1rem 0 .4rem;text-transform:uppercase;letter-spacing:.12em;color:#9ca3af">Aktuelle / nächste Matches</h2>
+        <div id="monitorMatches"></div>
+      </section>
+      <section class="monitor-card">
+        <h2 style="font-size:.9rem;margin:.1rem 0 .4rem;text-transform:uppercase;letter-spacing:.12em;color:#9ca3af">Live-Rangliste</h2>
+        <div id="monitorLeaderboard"></div>
+      </section>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept="application/json" hidden />
+
+  <footer>
+    <span>hAI Padel Americano · Static prototype · MIT Lizenz</span>
+  </footer>
+
+  <script>
+    const state={name:'',points:24,roundsCount:5,players:[],rounds:[]};
+    const els={
+      tName:document.getElementById('tName'),
+      points:document.getElementById('points'),
+      rounds:document.getElementById('rounds'),
+      players:document.getElementById('players'),
+      generateBtn:document.getElementById('generateBtn'),
+      demoBtn:document.getElementById('demoBtn'),
+      exportBtn:document.getElementById('exportBtn'),
+      importBtn:document.getElementById('importBtn'),
+      resetBtn:document.getElementById('resetBtn'),
+      fileInput:document.getElementById('fileInput'),
+      statPlayers:document.getElementById('statPlayers'),
+      statRounds:document.getElementById('statRounds'),
+      statMatches:document.getElementById('statMatches'),
+      statOpen:document.getElementById('statOpen'),
+      playersGrid:document.getElementById('playersGrid'),
+      playersInfo:document.getElementById('playersInfo'),
+      leaderboard:document.getElementById('leaderboard'),
+      schedule:document.getElementById('schedule'),
+      monitorToggle:document.getElementById('monitorToggle'),
+      monitor:document.getElementById('monitor'),
+      monitorClose:document.getElementById('monitorClose'),
+      monitorTitle:document.getElementById('monitorTitle'),
+      monitorMatches:document.getElementById('monitorMatches'),
+      monitorLeaderboard:document.getElementById('monitorLeaderboard')
+    };
+
+    function parseNames(raw){return raw.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);}
+    function createPlayers(names){return names.map((name,i)=>({id:i+1,name,matches:0,pointsFor:0,pointsAgainst:0,diff:0}));}
+    function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+    function genRounds(ids,count){const rounds=[];for(let r=1;r<=count;r++){const pool=shuffle(ids);const round={index:r,matches:[],byeIds:[]};if(pool.length%4!==0)round.byeIds.push(pool.pop());while(pool.length>=4){const a=pool.shift(),b=pool.shift(),c=pool.shift(),d=pool.shift();round.matches.push({court:round.matches.length+1,teamA:[a,b],teamB:[c,d],scoreA:'',scoreB:''});}rounds.push(round);}return rounds;}
+
+    function buildTournament(){const names=parseNames(els.players.value);if(names.length<4){alert('Bitte mindestens 4 Teilnehmer eintragen.');return;}state.name=els.tName.value.trim()||'Padel Americano';state.points=Number(els.points.value)||24;state.roundsCount=Math.max(1,Number(els.rounds.value)||5);state.players=createPlayers(names);const ids=state.players.map(p=>p.id);state.rounds=genRounds(ids,state.roundsCount);recalc();renderAll();}
+
+    function resetAll(){if(!confirm('Alles zurücksetzen?'))return;state.name='';state.points=24;state.roundsCount=5;state.players=[];state.rounds=[];els.tName.value='';els.points.value='24';els.rounds.value='5';els.players.value='';renderAll();}
+
+    function recalc(){state.players.forEach(p=>{p.matches=0;p.pointsFor=0;p.pointsAgainst=0;p.diff=0;});state.rounds.forEach(round=>{round.matches.forEach(m=>{const a=Number(m.scoreA),b=Number(m.scoreB);if(!Number.isFinite(a)||!Number.isFinite(b))return;[...m.teamA,...m.teamB].forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl)pl.matches++;});m.teamA.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=a;pl.pointsAgainst+=b;}});m.teamB.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=b;pl.pointsAgainst+=a;}});});});state.players.forEach(p=>{p.diff=p.pointsFor-p.pointsAgainst;});}
+
+    function renderStats(){const total=state.rounds.reduce((s,r)=>s+r.matches.length,0);const open=state.rounds.reduce((s,r)=>s+r.matches.filter(m=>!(m.scoreA!==''&&m.scoreB!=='')).length,0);els.statPlayers.textContent=state.players.length;els.statRounds.textContent=state.rounds.length;els.statMatches.textContent=total;els.statOpen.textContent=open;}
+
+    function playerName(id){return state.players.find(p=>p.id===id)?.name||'n/a';}
+
+    function renderPlayers(){if(!state.players.length){els.playersInfo.textContent='Noch kein Turnier erzeugt.';els.playersGrid.innerHTML='<div class="empty">Nach der Erstellung erscheinen hier alle Teilnehmer.</div>';return;}els.playersInfo.textContent=`${state.players.length} Spieler · ${state.rounds.length} Runden · ${state.points} Punkte`;els.playersGrid.innerHTML=state.players.map(p=>`<div class="player-chip"><span>${escapeHtml(p.name)}</span><span>${p.matches} Sp.</span></div>`).join('');}
+
+    function sortedPlayers(){return[...state.players].sort((a,b)=>b.pointsFor-a.pointsFor||b.diff-a.diff||a.name.localeCompare(b.name));}
+
+    function renderLeaderboard(){if(!state.players.length){els.leaderboard.innerHTML='<div class="empty">Sobald Ergebnisse eingetragen sind, erscheint hier die Rangliste.</div>';return;}const rows=sortedPlayers().map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.matches}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.leaderboard.innerHTML=`<table><thead><tr><th>#</th><th>Spieler</th><th>Spiele</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`;}
+
+    function renderSchedule(){if(!state.rounds.length){els.schedule.innerHTML='<div class="empty">Erzeuge zuerst einen Spielplan über "Americano generieren".</div>';return;}els.schedule.innerHTML=state.rounds.map(round=>{const matches=round.matches.map((m,i)=>`<div class="match" data-r="${round.index-1}" data-i="${i}"><div class="match-top"><span>Runde ${round.index} · Platz ${m.court}</span><span>${state.points} Punkte</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(m.teamA[0]))}</span><span>${escapeHtml(playerName(m.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${m.scoreA===''&&m.scoreB===''?'– : –':`${m.scoreA||0} : ${m.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(m.teamB[0]))}</span><span>${escapeHtml(playerName(m.teamB[1]))}</span></div></div><div class="score-inputs"><input type="number" min="0" max="${state.points}" value="${m.scoreA}" data-team="A" /><input type="number" min="0" max="${state.points}" value="${m.scoreB}" data-team="B" /><button type="button" class="btn-ghost" style="padding:.2rem .5rem;font-size:.7rem">Auto</button></div></div>`).join('');const bye=round.byeIds&&round.byeIds.length?`<div class="empty" style="margin-bottom:.35rem">Pause: ${round.byeIds.map(playerName).map(escapeHtml).join(', ')}</div>`:'';return`<section class="schedule-round">${bye}<div class="match-grid">${matches}</div></section>`;}).join('');
+      els.schedule.querySelectorAll('.match').forEach(card=>{const r=Number(card.dataset.r),i=Number(card.dataset.i);const inputs=card.querySelectorAll('input');const auto=card.querySelector('button');inputs.forEach(inp=>{inp.addEventListener('input',()=>{const t=inp.dataset.team;const val=inp.value===''?'':Number(inp.value);const m=state.rounds[r].matches[i];if(t==='A')m.scoreA=val;else m.scoreB=val;recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});});auto.addEventListener('click',()=>{const m=state.rounds[r].matches[i];const a=Number(m.scoreA),b=Number(m.scoreB);if(Number.isFinite(a)&&!Number.isFinite(b))m.scoreB=Math.max(0,state.points-a);else if(Number.isFinite(b)&&!Number.isFinite(a))m.scoreA=Math.max(0,state.points-b);else alert('Bitte zunächst Punkte für Team A oder B eintragen.');recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});});}
+
+    function renderMonitor(){els.monitorTitle.textContent=state.name||'Padel Americano';const all=[];state.rounds.forEach(round=>{round.matches.forEach(m=>{const done=m.scoreA!==''&&m.scoreB!=='';all.push({round:round.index,match:m,done});});});const upcoming=all.filter(x=>!x.done).slice(0,10);if(!upcoming.length){els.monitorMatches.innerHTML='<div class="empty">Alle Matches sind eingetragen.</div>';}else{els.monitorMatches.innerHTML=upcoming.map(x=>`<div class="match" style="margin-bottom:.3rem"><div class="match-top"><span>Runde ${x.round} · Platz ${x.match.court}</span><span>${state.points} Punkte</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(x.match.teamA[0]))}</span><span>${escapeHtml(playerName(x.match.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${x.match.scoreA===''&&x.match.scoreB===''?'– : –':`${x.match.scoreA||0} : ${x.match.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(x.match.teamB[0]))}</span><span>${escapeHtml(playerName(x.match.teamB[1]))}</span></div></div></div>`).join('');}
+      const rows=sortedPlayers().slice(0,12).map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.monitorLeaderboard.innerHTML=rows?`<table><thead><tr><th>#</th><th>Spieler</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">Noch keine Spieler.</div>';}
+
+    function renderAll(){renderStats();renderPlayers();renderLeaderboard();renderSchedule();renderMonitor();}
+
+    function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]||c));}
+    function signed(v){if(!Number.isFinite(v))return'0';return v>0?`+${v}`:String(v);}
+
+    function doExport(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=(state.name||'padel-americano').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.json';a.click();URL.revokeObjectURL(url);}
+
+    function doImport(file){const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);Object.assign(state,{name:data.name||'Padel Americano',points:Number(data.points||24),roundsCount:Number(data.roundsCount||data.rounds?.length||5),players:data.players||[],rounds:data.rounds||[]});els.tName.value=state.name;els.points.value=String(state.points);els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');recalc();renderAll();}catch(e){alert('JSON konnte nicht gelesen werden.');}};reader.readAsText(file);}
+
+    function loadDemo(){els.tName.value='Friday Night Demo';els.points.value='24';els.rounds.value='5';els.players.value=['Anna','Ben','Chris','Daria','Emir','Fiona','Gustav','Hanna'].join('\n');buildTournament();if(state.rounds[0]?.matches[0]){state.rounds[0].matches[0].scoreA=14;state.rounds[0].matches[0].scoreB=10;}if(state.rounds[0]?.matches[1]){state.rounds[0].matches[1].scoreA=11;state.rounds[0].matches[1].scoreB=13;}recalc();renderAll();}
+
+    els.generateBtn.addEventListener('click',buildTournament);
+    els.resetBtn.addEventListener('click',resetAll);
+    els.exportBtn.addEventListener('click',doExport);
+    els.importBtn.addEventListener('click',()=>els.fileInput.click());
+    els.fileInput.addEventListener('change',e=>{if(e.target.files[0])doImport(e.target.files[0]);});
+    els.demoBtn.addEventListener('click',loadDemo);
+
+    els.monitorToggle.addEventListener('click',()=>{els.monitor.classList.add('active');});
+    els.monitorClose.addEventListener('click',()=>{els.monitor.classList.remove('active');});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')els.monitor.classList.remove('active');});
+
+    renderAll();
+  </script>
+</body>
+</html>
