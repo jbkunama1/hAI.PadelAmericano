@@ -55,24 +55,6 @@ http://localhost:8000/index.html
 
 ---
 
-## 🌍 Deployment mit GitHub Pages
-
-1. Code nach GitHub pushen.
-2. Im Repo auf **Settings → Pages** gehen.
-3. Source: `Deploy from a branch`.
-4. Branch: `main`, Folder: `/ (root)`.
-5. Warten, bis GitHub Pages gebaut hat.
-
-Die App ist dann erreichbar unter:
-
-```text
-https://jbkunama1.github.io/hAI.PadelAmericano/
-```
-
-GitHub Pages nutzt die `index.html` im Root als Startseite. [web:51][web:57][web:60]
-
----
-
 ## 📦 Projektstruktur
 
 ```text
