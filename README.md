@@ -57,24 +57,6 @@ http://localhost:8000/index.html
 
 ---
 
-## 🌍 GitHub Pages
-
-You can publish the app directly as a **GitHub Pages** site:
-
-1. Push the repo to GitHub.
-2. Go to **Settings → Pages**.
-3. Source: `Deploy from a branch`.
-4. Branch: `main`, folder: `/ (root)`.
-5. Save and wait a few minutes – your page will be available at:
-
-```text
-https://jbkunama1.github.io/hAI.PadelAmericano/
-```
-
-GitHub Pages expects an `index.html` in the repository root as the entry point. [web:51][web:57][web:60]
-
----
-
 ## 📦 Project structure
 
 ```text
@@ -107,18 +89,6 @@ No build tools, bundlers or package managers required.
 - The leaderboard uses total points, matches played and point difference.
 
 Scheduling is heuristic: it aims for a fair mix of partners and opponents, not a mathematically perfect coverage.
-
----
-
-## 📤 Push updates
-
-Use the usual Git workflow to update the app:
-
-```bash
-git add .
-git commit -m "Update app"
-git push
-```
 
 ---
 
