@@ -135,11 +135,7 @@
         </div>
         <div class="field" id="timeField">
           <label for="timePerMatch">Zeit pro Match (Minuten, bei Zeitmodus)</label>
-          <select id="timePerMatch">
-            <option value="15">15</option>
-            <option value="19">19</option>
-            <option value="20" selected>20</option>
-          </select>
+          <input type="number" id="timePerMatch" value="20" min="1" />
         </div>
         <div class="field">
           <label for="courts">Anzahl Courts (1–4)</label>
