@@ -15,6 +15,8 @@
 <p align="center">
   <img src="https://img.shields.io/github/languages/top/jbkunama1/hAI.PadelAmericano?color=38bdf8&label=main%20stack&style=flat-square" alt="Main Stack" />
   <img src="https://img.shields.io/github/last-commit/jbkunama1/hAI.PadelAmericano?style=flat-square&color=f97316" alt="Last Commit" />
+  <a href="https://github.com/jbkunama1/hAI.PadelAmericano/actions/workflows/trufflehog.yml"><img src="https://img.shields.io/github/actions/workflow/status/jbkunama1/hAI.PadelAmericano/trufflehog.yml?label=TruffleHog%20Scan&logo=github&logoColor=white&style=flat-square" alt="TruffleHog Scan" /></a>
+  <img src="https://img.shields.io/badge/security-secrets%20scan%20enabled-brightgreen?logo=trustpilot&logoColor=white&style=flat-square" alt="Security" />
 </p>
 
 ---
@@ -86,6 +88,6 @@ Die Auslosung ist heuristisch – sie versucht eine faire Durchmischung, garanti
 
 ## 📜 Lizenz (MIT)
 
-Dieses Projekt soll unter der **MIT-Lizenz** veröffentlicht werden. Die MIT-Lizenz ist eine sehr freizügige Open-Source-Lizenz, die die Nutzung, Veränderung und Weitergabe des Codes mit wenigen Auflagen erlaubt – wichtig ist vor allem, dass Urheberrechtshinweis und Lizenztext erhalten bleiben. [web:46][web:47][web:50][web:53][web:56][web:59]
+Dieses Projekt soll unter der **MIT-Lizenz** veröffentlicht werden. Die MIT-Lizenz ist eine sehr freizügige Open-Source-Lizenz, die die Nutzung, Veränderung und Weitergabe des Codes mit wenigen Auflagen erlaubt – wichtig ist vor allem, dass Urheberrechtshinweis und Lizenztext erhalten bleiben.
 
 Der vollständige Lizenztext befindet sich in der Datei `LICENSE`.
