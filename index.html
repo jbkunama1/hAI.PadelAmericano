@@ -80,7 +80,6 @@
     body.light .empty{border-color:#d1d5db;color:#4b5563}
     body.light .subtitle{color:#4b5563}
 
-    /* ===== PRINT / PDF STYLES ===== */
     @media print{
       body{background:#fff !important;color:#000 !important;font-size:11pt}
       header,footer,.btn-row,.monitor-toggle,.monitor,.header-meta,.theme-toggle{display:none !important}
@@ -155,7 +154,7 @@
           <button class="btn-pdf" id="pdfRankBtn">📊 Rangliste als PDF</button>
           <button class="btn-pdf" id="pdfScheduleBtn">📋 Spielplan als PDF</button>
           <button class="btn-pdf" id="pdfAllBtn">📄 Alles als PDF</button>
-          <a href="vorlage.html" target="_blank" class="btn-ghost" style="font-size:.85rem;font-weight:600;text-decoration:none;padding:.45rem .85rem">🖨️ Vorlage drucken</a>
+          <a href="vorlage.html" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="font-size:.85rem;font-weight:600;text-decoration:none;padding:.45rem .85rem">🖨️ Vorlage drucken</a>
         </div>
         <div class="stats">
           <div class="stat"><span>Teilnehmer</span><strong id="statPlayers">0</strong></div>
@@ -208,7 +207,7 @@
   </div>
 
   <input type="file" id="fileInput" accept="application/json" hidden />
-  <footer><span>hAI Padel Americano · Static prototype · MIT Lizenz · <a href="vorlage.html" target="_blank" style="color:#22c55e">🖨️ Druckvorlage</a></span></footer>
+  <footer><span>hAI Padel Americano · Static prototype · MIT Lizenz · <a href="vorlage.html" target="_blank" rel="noopener noreferrer" style="color:#22c55e">🖨️ Druckvorlage</a></span></footer>
 
   <script>
     const THEME_KEY='hai_padel_theme';
@@ -233,6 +232,19 @@
 
     function parseNames(raw){return raw.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);}
     function createPlayers(names){return names.map((name,i)=>({id:i+1,name,matches:0,pointsFor:0,pointsAgainst:0,diff:0}));}
+    function sanitizeImportedPlayers(players){
+      return players
+        .filter(p=>p&&typeof p==='object')
+        .map((p,i)=>({
+          id:Number.isInteger(p.id)&&p.id>0?p.id:i+1,
+          name:typeof p.name==='string'?p.name.trim().slice(0,100):'',
+          matches:0,
+          pointsFor:0,
+          pointsAgainst:0,
+          diff:0
+        }))
+        .filter(p=>p.name);
+    }
     function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
     function hasDuplicatePlayers(names){const seen=new Set();for(const name of names){const lower=name.toLowerCase().trim();if(seen.has(lower))return true;seen.add(lower);}return false;}
 
@@ -277,12 +289,11 @@
       updateModeUi();renderAll();
     }
 
-    // FIX 1: Leerfeld-Guard – '' wird nicht als 0 gewertet
     function recalc(){
       state.players.forEach(p=>{p.matches=0;p.pointsFor=0;p.pointsAgainst=0;p.diff=0;});
       state.rounds.forEach(round=>{
         round.matches.forEach(m=>{
-          if(m.scoreA===''||m.scoreB==='')return; // explizite Leerfeld-Prüfung
+          if(m.scoreA===''||m.scoreB==='')return;
           const a=Number(m.scoreA),b=Number(m.scoreB);
           if(!Number.isFinite(a)||!Number.isFinite(b))return;
           [...m.teamA,...m.teamB].forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl)pl.matches++;});
@@ -332,7 +343,6 @@
       }).join('');
     }
 
-    // FIX 2: Event-Listener nur einmal registrieren (nicht bei jedem renderAll)
     function setupScheduleListeners(){
       els.schedule.addEventListener('input',e=>{
         if(e.target.tagName!=='INPUT'||!e.target.dataset.team)return;
@@ -377,7 +387,6 @@
     function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]||c));}
     function signed(v){if(!Number.isFinite(v))return'0';return v>0?`+${v}`:String(v);}
 
-    // FIX 3: doPrint – data-print erst nach window.onafterprint entfernen
     function doPrint(mode){
       if(!state.players.length){alert('Bitte zuerst ein Turnier erstellen.');return;}
       document.body.setAttribute('data-print',mode);
@@ -414,14 +423,18 @@
         try{
           const data=JSON.parse(reader.result);
           if(!data||typeof data!=='object')throw new Error('Ungültige JSON-Struktur');
-          const importedPlayers=Array.isArray(data.players)?data.players:[];
-          if(importedPlayers.length<4)throw new Error('Mindestens 4 Spieler erforderlich.');
+          const importedPlayers=sanitizeImportedPlayers(Array.isArray(data.players)?data.players:[]);
+          if(importedPlayers.length<4)throw new Error('Mindestens 4 gültige Spieler erforderlich.');
+          if(hasDuplicatePlayers(importedPlayers.map(p=>p.name)))throw new Error('Doppelte Spielernamen gefunden.');
           Object.assign(state,{
-            name:data.name||'Padel Americano',points:Number(data.points||24),
+            name:typeof data.name==='string'&&data.name.trim()?data.name.trim().slice(0,100):'Padel Americano',
+            points:Number(data.points||24),
             roundsCount:Number(data.roundsCount||data.rounds?.length||5),
-            players:importedPlayers,rounds:Array.isArray(data.rounds)?data.rounds:[]
+            players:importedPlayers,
+            rounds:Array.isArray(data.rounds)?data.rounds:[]
           });
-          state.mode=data.mode||'points';state.timePerMatch=Number(data.timePerMatch||20);
+          state.mode=['points','free','time'].includes(data.mode)?data.mode:'points';
+          state.timePerMatch=Math.max(1,Number(data.timePerMatch||20));
           state.courts=Math.max(1,Math.min(4,Number(data.courts||2)));
           els.tName.value=state.name;els.points.value=String(state.points);
           els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');
@@ -456,7 +469,6 @@
       applyTheme(stored||(prefers?'light':'dark'));
     }());
 
-    // Alle Event-Listener einmalig registrieren
     els.themeToggle.addEventListener('click',()=>{applyTheme(document.body.classList.contains('light')?'dark':'light');});
     els.generateBtn.addEventListener('click',buildTournament);
     els.resetBtn.addEventListener('click',resetAll);
@@ -472,7 +484,6 @@
     els.monitorClose.addEventListener('click',()=>els.monitor.classList.remove('active'));
     document.addEventListener('keydown',e=>{if(e.key==='Escape')els.monitor.classList.remove('active');});
 
-    // FIX 2: setupScheduleListeners nur EINMAL beim Start aufrufen
     setupScheduleListeners();
     updateModeUi();
     renderAll();
