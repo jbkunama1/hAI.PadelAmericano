@@ -21,6 +21,46 @@
 
 ---
 
+## 🧠 Americano-Logik
+
+Padel Americano ist ein geselliges Turnierformat, bei dem **alle gegen alle** spielen – aber immer in wechselnden Doppel-Konstellationen. Das Besondere: Gewertet wird **individuell**, nicht als Team.
+
+### Grundprinzip
+
+- Gespielt wird in Doppeln (2 vs. 2).
+- Nach jedem Match werden die Partner und Gegner neu ausgelost.
+- Ziel ist eine möglichst faire Durchmischung – jede Person soll mit und gegen möglichst viele andere spielen.
+- Die erzielten Punkte (z. B. 32:28 = 32 Punkte für Team A, 28 für Team B) werden **direkt den einzelnen Spielern** gutgeschrieben.
+
+### Spieleranzahl & Pausen
+
+| Spieler | Courts | Pause pro Runde |
+|---------|--------|-----------------|
+| 4 | 1 | keine |
+| 8 | 2 | keine |
+| 6 | 1 | 2 Spieler |
+| 10 | 2 | 2 Spieler |
+| 12 | 3 | keine |
+
+Ist die Spielerzahl **nicht durch 4 teilbar**, pausiert pro Runde automatisch eine Gruppe (meist 2 Personen). Die App verteilt Pausen so gleichmäßig wie möglich.
+
+### Auslosungsmöglichkeiten
+
+Die App unterstützt zwei Modi:
+
+- **Zufällige Auslosung** – Partner und Gegner werden pro Runde per Zufall neu gemischt. Ideal für lockere Runden mit Freunden oder Schulklassen.
+- **Heuristische Optimierung** – Die App versucht, Wiederholungen (gleiche Partner / gleiche Gegner) zu minimieren. Empfohlen ab 6+ Spielern für ein faireres Erlebnis.
+
+> ⚠️ Die Auslosung garantiert kein perfektes mathematisches Rundenschema, da dies bei vielen Spielerzahlen kombinatorisch nicht exakt lösbar ist.
+
+### Wertung & Rangliste
+
+- Punkte werden nach jedem Match für alle vier beteiligten Spieler eingetragen.
+- Die **Rangliste** sortiert nach: Gesamtpunkten → Anzahl Spiele → Punktedifferenz.
+- Optional: Siege können zusätzlich als Bonus gezählt werden (konfigurierbar).
+
+---
+
 ## ✨ Funktionen
 
 - 🎲 **Americano-Auslosung** – automatische Runden mit Doppel-Teams.
@@ -28,36 +68,7 @@
 - 🧮 **Live-Rangliste** – Einzelwertung nach Punkten, Spielen und Differenz.
 - 🖥️ **Monitor-Modus** – Vollbild-nahe Anzeige für TV/Beamer.
 - 💾 **JSON Import/Export** – Turniere lokal sichern und später wieder laden.
-- 🌐 **100 % statisch** – läuft komplett im Browser.
-
----
-
-## 🚀 Schnellstart
-
-### 1. Repository klonen
-
-```bash
-git clone https://github.com/jbkunama1/hAI.PadelAmericano.git
-cd hAI.PadelAmericano
-```
-
-### 2. Lokal starten
-
-Variante A – direkt öffnen:
-
-- `index.html` im Browser öffnen.
-
-Variante B – kleiner HTTP-Server:
-
-```bash
-python3 -m http.server 8000
-```
-
-Dann im Browser:
-
-```text
-http://localhost:8000/index.html
-```
+- 🌐 **100 % statisch** – läuft komplett im Browser, kein Server nötig.
 
 ---
 
@@ -74,20 +85,61 @@ hAI.PadelAmericano/
 
 ---
 
-## 🧠 Americano-Logik (kurz erklärt)
+## 🚀 Deployment
 
-- Gespielt wird im **Doppel**, gewertet wird **individuell**.
-- Die App erzeugt mehrere Runden mit zufällig verteilten Partnern und Gegnern.
-- Ist die Spielerzahl nicht durch 4 teilbar, hat pro Runde eine Person Pause.
-- Nach jedem Match werden die Punkte auf die beteiligten Spieler verteilt.
-- Die Rangliste sortiert nach Gesamtpunkten, Spielen und Punktedifferenz.
+Da die App **100 % statisch** ist (reines HTML/CSS/JS), gibt es mehrere einfache Wege, sie bereitzustellen:
 
-Die Auslosung ist heuristisch – sie versucht eine faire Durchmischung, garantiert aber kein perfektes mathematisches Rundenschema.
+### ⭐ GitHub Pages (empfohlen)
+
+Die einfachste und kostenlose Option – direkt aus dem Repository heraus:
+
+1. Repository auf GitHub öffnen → **Settings** → **Pages**
+2. Source: **Deploy from a branch** → Branch `main`, Ordner `/ (root)`
+3. Speichern – nach wenigen Minuten ist die App erreichbar unter:
+
+```
+https://jbkunama1.github.io/hAI.PadelAmericano/
+```
+
+> 💡 Bei Änderungen am `main`-Branch wird die Seite automatisch neu deployed.
+
+### Lokal per HTTP-Server
+
+```bash
+git clone https://github.com/jbkunama1/hAI.PadelAmericano.git
+cd hAI.PadelAmericano
+python3 -m http.server 8000
+# → http://localhost:8000/index.html
+```
+
+### Eigener Webserver / Self-Hosted
+
+Die `index.html` kann direkt in jeden Webserver-Ordner (Apache, Nginx, Caddy) gelegt werden – keine Build-Tools oder Abhängigkeiten nötig.
+
+### Docker / Portainer
+
+Für eine containerisierte Variante genügt ein einfaches Nginx-Image:
+
+```yaml
+# docker-compose.yml
+services:
+  padel:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+```
+
+```bash
+docker compose up -d
+# → http://localhost:8080/index.html
+```
 
 ---
 
 ## 📜 Lizenz (MIT)
 
-Dieses Projekt soll unter der **MIT-Lizenz** veröffentlicht werden. Die MIT-Lizenz ist eine sehr freizügige Open-Source-Lizenz, die die Nutzung, Veränderung und Weitergabe des Codes mit wenigen Auflagen erlaubt – wichtig ist vor allem, dass Urheberrechtshinweis und Lizenztext erhalten bleiben.
+Dieses Projekt steht unter der **MIT-Lizenz** – Nutzung, Veränderung und Weitergabe sind frei erlaubt, solange Urheberrechtshinweis und Lizenztext erhalten bleiben.
 
 Der vollständige Lizenztext befindet sich in der Datei `LICENSE`.
