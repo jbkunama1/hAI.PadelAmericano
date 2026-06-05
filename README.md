@@ -21,54 +21,144 @@
 
 ---
 
-## 🧠 Americano-Logik
+## 🧠 Turnierformate & Logik
 
-Padel Americano ist ein geselliges Turnierformat, bei dem **alle gegen alle** spielen – aber immer in wechselnden Doppel-Konstellationen. Das Besondere: Gewertet wird **individuell**, nicht als Team.
-
-### Grundprinzip
-
-- Gespielt wird in Doppeln (2 vs. 2).
-- Nach jedem Match werden die Partner und Gegner neu ausgelost.
-- Ziel ist eine möglichst faire Durchmischung – jede Person soll mit und gegen möglichst viele andere spielen.
-- Die erzielten Punkte (z. B. 32:28 = 32 Punkte für Team A, 28 für Team B) werden **direkt den einzelnen Spielern** gutgeschrieben.
-
-### Spieleranzahl & Pausen
-
-| Spieler | Courts | Pause pro Runde |
-|---------|--------|-----------------|
-| 4 | 1 | keine |
-| 8 | 2 | keine |
-| 6 | 1 | 2 Spieler |
-| 10 | 2 | 2 Spieler |
-| 12 | 3 | keine |
-
-Ist die Spielerzahl **nicht durch 4 teilbar**, pausiert pro Runde automatisch eine Gruppe (meist 2 Personen). Die App verteilt Pausen so gleichmäßig wie möglich.
-
-### Auslosungsmöglichkeiten
-
-Die App unterstützt zwei Modi:
-
-- **Zufällige Auslosung** – Partner und Gegner werden pro Runde per Zufall neu gemischt. Ideal für lockere Runden mit Freunden oder Schulklassen.
-- **Heuristische Optimierung** – Die App versucht, Wiederholungen (gleiche Partner / gleiche Gegner) zu minimieren. Empfohlen ab 6+ Spielern für ein faireres Erlebnis.
-
-> ⚠️ Die Auslosung garantiert kein perfektes mathematisches Rundenschema, da dies bei vielen Spielerzahlen kombinatorisch nicht exakt lösbar ist.
-
-### Wertung & Rangliste
-
-- Punkte werden nach jedem Match für alle vier beteiligten Spieler eingetragen.
-- Die **Rangliste** sortiert nach: Gesamtpunkten → Anzahl Spiele → Punktedifferenz.
-- Optional: Siege können zusätzlich als Bonus gezählt werden (konfigurierbar).
+Padel-Turniere im Freizeitbereich folgen meist einem von mehreren verwandten Formaten. Allen gemeinsam: gespielt wird **im Doppel (2 vs. 2)**, gewertet wird aber **individuell**. Die App unterstützt das Americano-Format und erklärt die Logik der verwandten Formate, damit du das Passende für deine Gruppe wählen kannst.
 
 ---
 
-## ✨ Funktionen
+### 🎲 Americano (Klassisch)
+
+Das **Grundformat** – einfach, sozial, für alle Niveaus geeignet.
+
+**Ablauf:**
+1. Alle Paarungen werden **zufällig** ausgelost – in jeder Runde neue Partner und neue Gegner.
+2. Jedes Match wird bis zu einer **festen Punktzahl** gespielt (typisch: 16, 24 oder 32 Punkte).
+3. Nach jedem Match werden die Punkte **direkt den einzelnen Spielern** gutgeschrieben.
+4. Das Turnier endet nach einer festgelegten Anzahl Runden oder wenn jeder gegen jeden gespielt hat.
+
+**Beispiel-Wertung:**  
+Match endet 14:10 → Spieler A & B bekommen je **14 Punkte**, Spieler C & D je **10 Punkte**.
+
+**Aufschlagregel:**  
+Das aufschlagende Team wechselt alle 2–4 Punkte (je nach Hausregel). Jeder Ball zählt als 1 Punkt.
+
+**Ideal für:** lockere Gruppen, Schulklassen, Vereinsabende, Spieler aller Stärken.
+
+---
+
+### ⚡ Mexicano
+
+Eine **dynamische Weiterentwicklung** des Americano – mit automatischer Anpassung nach Leistung.
+
+**Der entscheidende Unterschied zum Americano:**  
+Ab der zweiten Runde werden Paarungen **nicht mehr zufällig** bestimmt, sondern basierend auf der **aktuellen Rangliste**:
+
+- Rang 1 & 3 spielen **zusammen** gegen Rang 2 & 4
+- Rang 5 & 7 spielen **zusammen** gegen Rang 6 & 8
+- usw.
+
+So entstehen zunehmend **ausgeglichene Matches** – starke Spieler treffen auf starke, schwächere auf ähnlich Starke.
+
+**Ablauf:**
+1. **Runde 1:** zufällige Auslosung (wie Americano)
+2. **Ab Runde 2:** Paarung nach aktuellem Ranking (1+3 vs. 2+4, 5+7 vs. 6+8 …)
+3. Wertung identisch zum Americano – individuelle Punkte pro Match
+
+> ⚠️ Im Mexicano kann man **mit oder gegen denselben Spieler mehrmals** spielen – das ist systembedingt und kein Fehler.
+
+**Ideal für:** Gruppen mit **gemischten Leistungslevels**, die trotzdem faire Matches wollen.
+
+---
+
+### 👫 Mixed Americano
+
+Wie klassisches Americano, aber mit **erzwungener Geschlechterdurchmischung**.
+
+**Regeln:**
+- Jedes Team besteht immer aus **genau einem Mann und einer Frau** (Mixed Doubles).
+- Gleiche Anzahl männlicher und weiblicher Spieler erforderlich (mind. je 4, also 8 gesamt).
+- Wechselnde Partner nach jeder Runde – aber immer Mixed.
+- Am Ende wird **getrennt gewertet**: bester Herr und beste Dame gewinnen jeweils.
+
+**Ideal für:** Vereinsabende, gemischte Gruppen, inklusive Formate.
+
+---
+
+### 🌮 Mixed Mexicano
+
+Kombination aus **Mexicano-Dynamik** und **Mixed-Doubles-Pflicht**.
+
+- Paarungen ab Runde 2 nach aktuellem Ranking – aber jedes Team muss **1 Mann + 1 Frau** sein.
+- Die Rangliste läuft getrennt oder gemischt (je nach Hausregel).
+- Besonders geeignet, wenn das Leistungsniveau zwischen Männern und Frauen vergleichbar ist.
+
+**Ideal für:** fortgeschrittene gemischte Gruppen, die sowohl Fairness als auch Dynamik wollen.
+
+---
+
+### 🤝 Team Americano / Team Mexicano
+
+Varianten, bei denen **feste Teams** (vorher bestimmt) durch das gesamte Turnier spielen.
+
+| Merkmal | Individual (Standard) | Team-Variante |
+|---|---|---|
+| Partner | wechselt jede Runde | fest für das ganze Turnier |
+| Wertung | pro Spieler | pro Team |
+| Strategie | soziales Mischen | Teambuilding, Vereinspokal |
+| Paarung | zufällig (Americano) / Ranking (Mexicano) | gleiche Mechanik |
+
+**Ideal für:** Vereinspokale, Firmenturniere, wenn Teams als Einheit antreten sollen.
+
+---
+
+### 📊 Formatvergleich auf einen Blick
+
+| Format | Paarung | Partner | Niveau-Ausgleich | Wertung |
+|---|---|---|---|---|
+| Americano | zufällig | wechselnd | ❌ | individuell |
+| Mexicano | Ranking-basiert | wechselnd | ✅ | individuell |
+| Mixed Americano | zufällig, Mixed | wechselnd | ❌ | individuell (getrennt) |
+| Mixed Mexicano | Ranking-basiert, Mixed | wechselnd | ✅ | individuell |
+| Team Americano | zufällig | fest | ❌ | pro Team |
+| Team Mexicano | Ranking-basiert | fest | ✅ | pro Team |
+
+---
+
+### 🏟️ Spieleranzahl & Courts
+
+| Spieler | Courts | Pause pro Runde | Empfohlenes Format |
+|---------|--------|-----------------|-------------------|
+| 4 | 1 | keine | Americano |
+| 6 | 1 | 2 Spieler | Americano |
+| 8 | 2 | keine | Americano / Mexicano |
+| 10 | 2 | 2 Spieler | Mexicano |
+| 12 | 3 | keine | Mexicano |
+| 16+ | 4+ | keine | Mexicano / Mixed |
+
+Ist die Spielerzahl **nicht durch 4 teilbar**, pausiert pro Runde eine Gruppe. Die App verteilt Pausen möglichst gleichmäßig auf alle Spieler.
+
+---
+
+### 🏆 Wertung & Rangliste (alle Formate)
+
+- Jedes Match wird bis zu einer festen Punktzahl gespielt – üblich sind **16, 24 oder 32 Punkte**.
+- Alternativ kann ein **Zeitlimit** (10–20 Minuten) gesetzt werden.
+- Der Aufschlag wechselt alle **2–4 Punkte** zum Gegner.
+- Jeder gewonnene Ball = **1 Punkt** für das entsprechende Team.
+- Diese Punkte werden nach Matchende **direkt auf die beteiligten Einzelspieler** übertragen.
+- Die **Rangliste** sortiert nach: Gesamtpunkte → Spielanzahl → Punktedifferenz.
+
+---
+
+## ✨ Funktionen der App
 
 - 🎲 **Americano-Auslosung** – automatische Runden mit Doppel-Teams.
 - 📋 **Match-Verwaltung** – Punkte pro Match und Platz eintragen.
 - 🧮 **Live-Rangliste** – Einzelwertung nach Punkten, Spielen und Differenz.
 - 🖥️ **Monitor-Modus** – Vollbild-nahe Anzeige für TV/Beamer.
 - 💾 **JSON Import/Export** – Turniere lokal sichern und später wieder laden.
-- 🌐 **100 % statisch** – läuft komplett im Browser, kein Server nötig.
+- 🌐 **100 % statisch** – läuft komplett im Browser, kein Server nötig.
 
 ---
 
@@ -87,7 +177,7 @@ hAI.PadelAmericano/
 
 ## 🚀 Deployment
 
-Da die App **100 % statisch** ist (reines HTML/CSS/JS), gibt es mehrere einfache Wege, sie bereitzustellen:
+Da die App **100 % statisch** ist (reines HTML/CSS/JS), gibt es mehrere einfache Wege, sie bereitzustellen:
 
 ### ⭐ GitHub Pages (empfohlen)
 
