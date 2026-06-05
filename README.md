@@ -2,9 +2,9 @@
 
 > Ein schlanker Turnier-Manager für **Padel Americano** – ideal für Vereine, Schulen und Freundeskreise.
 
-<p align="center">
-  <img src="hai-padel-banner.png" alt="hAI Padel Americano Banner" width="800" />
-</p>
+<div align="center">
+  <img src="hai-padel-banner.png" alt="hAI Padel Americano Banner" width="480" />
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/padel-americano-22c55e?style=for-the-badge&logo=google-forms&logoColor=ffffff" alt="Padel Americano" />
