@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Padel Americano – Druckvorlage</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,Helvetica,sans-serif;font-size:10pt;color:#000;background:#fff;padding:1cm}
+    h1{font-size:16pt;font-weight:700;margin-bottom:.15cm}
+    h2{font-size:11pt;font-weight:700;margin-bottom:.2cm;border-bottom:2px solid #000;padding-bottom:.1cm}
+    h3{font-size:10pt;font-weight:700;margin-bottom:.15cm}
+    .meta{font-size:9pt;color:#444;margin-bottom:.4cm}
+    .page-break{page-break-after:always}
+    .section{margin-bottom:.6cm}
+
+    /* Header */
+    .doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5cm;border-bottom:3px solid #000;padding-bottom:.3cm}
+    .doc-header .logo{font-size:20pt;font-weight:900;letter-spacing:-.03em}
+    .doc-header .logo span{color:#16a34a}
+    .doc-header .info{text-align:right;font-size:9pt;color:#444}
+
+    /* Teilnehmerliste */
+    .player-list{display:grid;grid-template-columns:repeat(4,1fr);gap:.2cm .4cm}
+    .player-entry{border-bottom:1px solid #aaa;padding:.1cm .05cm;font-size:10pt;min-height:.7cm}
+    .player-num{font-size:8pt;color:#888;margin-right:.2cm}
+
+    /* Spielplan-Tabelle */
+    table{width:100%;border-collapse:collapse;margin-bottom:.4cm}
+    th{background:#000;color:#fff;padding:.2cm .25cm;font-size:9pt;text-align:left}
+    td{border:1px solid #aaa;padding:.2cm .25cm;font-size:9pt;vertical-align:middle}
+    tr:nth-child(even) td{background:#f9f9f9}
+    .court-badge{display:inline-block;border:1px solid #000;border-radius:3px;padding:.05cm .15cm;font-size:8pt;font-weight:700;min-width:.8cm;text-align:center}
+    .score-box{display:inline-block;border:1px solid #000;width:1.1cm;height:.55cm;text-align:center;line-height:.55cm;font-weight:700;background:#fff}
+    .vs{font-weight:700;margin:0 .15cm}
+
+    /* Rangliste */
+    .ranking-table th{background:#1a1a1a}
+    .rank-num{display:inline-block;border:1px solid #000;border-radius:50%;width:.55cm;height:.55cm;text-align:center;line-height:.55cm;font-size:8pt;font-weight:700}
+    .rank-1{background:#fbbf24;border-color:#92400e}
+    .rank-2{background:#d1d5db;border-color:#6b7280}
+    .rank-3{background:#cd7c32;border-color:#92400e;color:#fff}
+
+    /* Notizen */
+    .notes-lines{display:flex;flex-direction:column;gap:.45cm}
+    .notes-line{border-bottom:1px solid #ccc;height:.45cm}
+
+    /* Footer */
+    .doc-footer{margin-top:.5cm;border-top:1px solid #aaa;padding-top:.2cm;font-size:8pt;color:#888;display:flex;justify-content:space-between}
+
+    /* Print */
+    @media print{
+      body{padding:.8cm}
+      .no-print{display:none !important}
+      a{color:#000;text-decoration:none}
+    }
+    @media screen{
+      body{max-width:21cm;margin:0 auto;box-shadow:0 0 10px rgba(0,0,0,.15);padding:1.5cm}
+      .print-btn{position:fixed;top:1rem;right:1rem;background:#16a34a;color:#fff;border:none;border-radius:999px;padding:.5rem 1.2rem;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn no-print" onclick="window.print()">🖨️ Drucken / Als PDF speichern</button>
+
+  <!-- ===== SEITE 1: TURNIERKOPF + TEILNEHMER + SPIELPLAN ===== -->
+  <div class="doc-header">
+    <div>
+      <div class="logo">hAI <span>Padel</span> Americano</div>
+      <div class="meta">Offizielle Turnierdokumentation</div>
+    </div>
+    <div class="info">
+      <strong>Turniername:</strong> <span style="border-bottom:1px solid #aaa;display:inline-block;min-width:5cm">&nbsp;</span><br/>
+      <strong>Datum:</strong> <span style="border-bottom:1px solid #aaa;display:inline-block;min-width:5cm">&nbsp;</span><br/>
+      <strong>Ort / Anlage:</strong> <span style="border-bottom:1px solid #aaa;display:inline-block;min-width:5cm">&nbsp;</span><br/>
+      <strong>Courts:</strong> ☐ 1 &nbsp; ☐ 2 &nbsp; ☐ 3 &nbsp; ☐ 4 &nbsp;&nbsp; <strong>Punkte/Match:</strong> ☐ 16 &nbsp; ☐ 24 &nbsp; ☐ 32
+    </div>
+  </div>
+
+  <!-- Teilnehmerliste -->
+  <div class="section">
+    <h2>👥 Teilnehmerliste</h2>
+    <div class="player-list">
+      <!-- 16 Felder für Spielernamen -->
+      <div class="player-entry"><span class="player-num">1</span></div>
+      <div class="player-entry"><span class="player-num">2</span></div>
+      <div class="player-entry"><span class="player-num">3</span></div>
+      <div class="player-entry"><span class="player-num">4</span></div>
+      <div class="player-entry"><span class="player-num">5</span></div>
+      <div class="player-entry"><span class="player-num">6</span></div>
+      <div class="player-entry"><span class="player-num">7</span></div>
+      <div class="player-entry"><span class="player-num">8</span></div>
+      <div class="player-entry"><span class="player-num">9</span></div>
+      <div class="player-entry"><span class="player-num">10</span></div>
+      <div class="player-entry"><span class="player-num">11</span></div>
+      <div class="player-entry"><span class="player-num">12</span></div>
+      <div class="player-entry"><span class="player-num">13</span></div>
+      <div class="player-entry"><span class="player-num">14</span></div>
+      <div class="player-entry"><span class="player-num">15</span></div>
+      <div class="player-entry"><span class="player-num">16</span></div>
+    </div>
+  </div>
+
+  <!-- Spielplan -->
+  <div class="section">
+    <h2>📋 Spielplan</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:1.2cm">Runde</th>
+          <th style="width:1.4cm">Court</th>
+          <th>Team A</th>
+          <th style="width:3.5cm;text-align:center">Ergebnis</th>
+          <th>Team B</th>
+          <th style="width:2cm">Pause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Runde 1 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">1</td><td><span class="court-badge">C1</span></td><td style="min-width:4cm"></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td style="min-width:4cm"></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <!-- Runde 2 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">2</td><td><span class="court-badge">C1</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <!-- Runde 3 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">3</td><td><span class="court-badge">C1</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <!-- Runde 4 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">4</td><td><span class="court-badge">C1</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <!-- Runde 5 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">5</td><td><span class="court-badge">C1</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <!-- Runde 6 -->
+        <tr><td rowspan="2" style="font-weight:700;background:#f0fdf4">6</td><td><span class="court-badge">C1</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+        <tr><td><span class="court-badge">C2</span></td><td></td><td style="text-align:center"><span class="score-box"></span> <span class="vs">:</span> <span class="score-box"></span></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ===== SEITE 2: RANGLISTE + NOTIZEN ===== -->
+  <div class="doc-header">
+    <div>
+      <div class="logo">hAI <span>Padel</span> Americano</div>
+      <div class="meta">Abschlusstabelle &amp; Notizen</div>
+    </div>
+    <div class="info" style="font-size:9pt">
+      <strong>Turniername:</strong> <span style="border-bottom:1px solid #aaa;display:inline-block;min-width:5cm">&nbsp;</span><br/>
+      <strong>Datum:</strong> <span style="border-bottom:1px solid #aaa;display:inline-block;min-width:5cm">&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- Rangliste -->
+  <div class="section">
+    <h2>🏆 Abschluss-Rangliste</h2>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th style="width:1.2cm">#</th>
+          <th>Spieler / Spielerin</th>
+          <th style="width:1.8cm;text-align:center">Spiele</th>
+          <th style="width:2cm;text-align:center">Punkte</th>
+          <th style="width:2cm;text-align:center">Diff</th>
+          <th style="width:3cm">Bemerkung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="rank-num rank-1">1</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num rank-2">2</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num rank-3">3</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">4</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">5</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">6</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">7</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">8</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">9</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">10</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">11</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">12</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">13</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">14</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">15</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td><span class="rank-num">16</span></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Unterschriften -->
+  <div class="section">
+    <h2>✍️ Unterschriften</h2>
+    <table>
+      <thead><tr><th>Funktion</th><th>Name</th><th>Unterschrift</th></tr></thead>
+      <tbody>
+        <tr><td>Turnierleitung</td><td></td><td style="height:1cm"></td></tr>
+        <tr><td>Protokollführung</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Notizen -->
+  <div class="section">
+    <h2>📝 Notizen</h2>
+    <div class="notes-lines">
+      <div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div>
+      <div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div>
+      <div class="notes-line"></div><div class="notes-line"></div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <span>hAI Padel Americano · Druckvorlage · MIT Lizenz</span>
+    <span>github.com/jbkunama1/hAI.PadelAmericano · GitHub Pages: jbkunama1.github.io/hAI.PadelAmericano</span>
+  </div>
+
+</body>
+</html>

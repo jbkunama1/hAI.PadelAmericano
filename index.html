@@ -37,6 +37,7 @@
     .btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#022c22}
     .btn-ghost{background:#020617;border-color:#4b5563;color:#e5e7eb}
     .btn-danger{background:rgba(248,113,113,.1);border-color:#fecaca;color:#fecaca}
+    .btn-pdf{background:rgba(99,102,241,.15);border-color:#818cf8;color:#c7d2fe}
     .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin-top:.6rem}
     .stat{border-radius:.6rem;border:1px solid #1f2937;padding:.45rem .55rem;font-size:.8rem}
     .stat span:first-child{display:block;color:#9ca3af;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
@@ -70,8 +71,6 @@
     .monitor-body{display:grid;grid-template-columns:minmax(0,1.2fr)minmax(0,1fr);gap:.6rem;flex:1}
     .monitor-card{border-radius:.7rem;border:1px solid #1f2937;padding:.5rem .6rem;overflow:auto}
     @media(max-width:800px){.monitor-body{grid-template-columns:1fr}}
-
-    /* Light theme overrides */
     body.light{background:#f3f4f6;color:#020617}
     body.light .card,body.light .monitor-card,body.light .hero-banner{background:#ffffff;border-color:#d1d5db;box-shadow:0 10px 25px rgba(15,23,42,.1)}
     body.light input,body.light textarea,body.light select{background:#ffffff;color:#020617;border-color:#d1d5db}
@@ -80,6 +79,29 @@
     body.light .monitor-btn{background:#ffffff;color:#111827;border-color:#d1d5db}
     body.light .empty{border-color:#d1d5db;color:#4b5563}
     body.light .subtitle{color:#4b5563}
+
+    /* ===== PRINT / PDF STYLES ===== */
+    @media print{
+      body{background:#fff !important;color:#000 !important;font-size:11pt}
+      header,footer,.btn-row,.monitor-toggle,.monitor,.header-meta,#generateBtn,#demoBtn,#exportBtn,#importBtn,#resetBtn,#pdfRankBtn,#pdfScheduleBtn,#pdfAllBtn,.score-inputs,.theme-toggle{display:none !important}
+      main{display:block !important;max-width:100% !important;padding:0 !important}
+      .layout{display:block !important}
+      .card{border:1px solid #ccc !important;box-shadow:none !important;background:#fff !important;border-radius:4px !important;margin-bottom:1rem !important;padding:.75rem !important;break-inside:avoid}
+      table{width:100%;border-collapse:collapse;font-size:10pt}
+      th,td{border:1px solid #ccc;padding:.3rem .4rem}
+      th{background:#f3f4f6;font-weight:600}
+      .rank{border:1px solid #333;color:#000;background:none}
+      .match{border:1px solid #ccc !important;background:#fff !important;break-inside:avoid;margin-bottom:.4rem}
+      .match-top{color:#555}
+      .empty{border:1px dashed #ccc;color:#555}
+      .player-chip{border:1px solid #ccc !important;background:#fff !important}
+      .print-only{display:block !important}
+      .print-hide{display:none !important}
+      /* Sections shown depend on body data-print attribute */
+      body[data-print="ranking"] #scheduleSection{display:none !important}
+      body[data-print="schedule"] #rankingSection{display:none !important}
+    }
+    .print-only{display:none}
   </style>
 </head>
 <body>
@@ -93,6 +115,7 @@
           <div class="pill"><span>🧮</span><span>Live-Rangliste</span></div>
           <div class="pill"><span>🖥️</span><span>Monitor-Modus</span></div>
           <div class="pill"><span>💾</span><span>JSON Import/Export</span></div>
+          <div class="pill"><span>📄</span><span>PDF Export</span></div>
         </div>
       </div>
       <div class="hero-banner">
@@ -105,7 +128,7 @@
         <a href="README.md" class="active">Deutsch</a>
         <a href="README_en.md">English</a>
       </div>
-      <button class="btn-ghost theme-toggle" id="themeToggle" type="button" aria-label="Zwischen Hell- und Dunkelmodus wechseln">☀️ Hell</button>
+      <button class="btn-ghost theme-toggle" id="themeToggle" type="button">☀️ Hell</button>
     </div>
   </header>
 
@@ -113,58 +136,26 @@
     <section>
       <article class="card">
         <h2>Turnier konfigurieren</h2>
-        <div class="field">
-          <label for="tName">Turniername</label>
-          <input id="tName" type="text" placeholder="z. B. Friday Night Americano" maxlength="100" />
-        </div>
-        <div class="field">
-          <label for="mode">Modus</label>
-          <select id="mode">
-            <option value="points" selected>Punkte bis Ziel</option>
-            <option value="free">Punkte (ohne Vorgabe)</option>
-            <option value="time">Zeitbasiert</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="points">Punkte pro Match (bei Punkte-Ziel)</label>
-          <select id="points">
-            <option value="16">16</option>
-            <option value="20">20</option>
-            <option value="24" selected>24</option>
-            <option value="32">32</option>
-          </select>
-        </div>
-        <div class="field" id="timeField">
-          <label for="timePerMatch">Zeit pro Match (Minuten, bei Zeitmodus)</label>
-          <input type="number" id="timePerMatch" value="20" min="1" />
-        </div>
-        <div class="field">
-          <label for="courts">Anzahl Courts (1–4)</label>
-          <select id="courts">
-            <option value="1">1</option>
-            <option value="2" selected>2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="rounds">Anzahl Runden</label>
-          <input id="rounds" type="number" min="1" max="12" value="5" />
-        </div>
-        <div class="field">
-          <label for="players">Teilnehmer (ein Name pro Zeile)</label>
-          <textarea id="players" placeholder="Anna
-Ben
-Chris
-Daria
-…" maxlength="2000"></textarea>
-        </div>
+        <div class="field"><label for="tName">Turniername</label><input id="tName" type="text" placeholder="z. B. Friday Night Americano" maxlength="100" /></div>
+        <div class="field"><label for="mode">Modus</label><select id="mode"><option value="points" selected>Punkte bis Ziel</option><option value="free">Punkte (ohne Vorgabe)</option><option value="time">Zeitbasiert</option></select></div>
+        <div class="field"><label for="points">Punkte pro Match</label><select id="points"><option value="16">16</option><option value="20">20</option><option value="24" selected>24</option><option value="32">32</option></select></div>
+        <div class="field" id="timeField"><label for="timePerMatch">Zeit pro Match (Minuten)</label><input type="number" id="timePerMatch" value="20" min="1" /></div>
+        <div class="field"><label for="courts">Anzahl Courts (1–4)</label><select id="courts"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></div>
+        <div class="field"><label for="rounds">Anzahl Runden</label><input id="rounds" type="number" min="1" max="12" value="5" /></div>
+        <div class="field"><label for="players">Teilnehmer (ein Name pro Zeile)</label><textarea id="players" placeholder="Anna&#10;Ben&#10;Chris&#10;Daria&#10;…" maxlength="2000"></textarea></div>
         <div class="btn-row">
-          <button class="btn-primary" id="generateBtn" aria-label="Americano Tournament erzeugen">🎲 Americano generieren</button>
-          <button class="btn-ghost" id="demoBtn" aria-label="Demo-Turnier laden">⚡ Demo laden</button>
-          <button class="btn-ghost" id="exportBtn" aria-label="Turnier als JSON exportieren">📤 JSON export</button>
-          <button class="btn-ghost" id="importBtn" aria-label="Turnier aus JSON importieren">📥 JSON import</button>
-          <button class="btn-danger" id="resetBtn" aria-label="Alle Daten zurücksetzen">🧹 Zurücksetzen</button>
+          <button class="btn-primary" id="generateBtn">🎲 Americano generieren</button>
+          <button class="btn-ghost" id="demoBtn">⚡ Demo laden</button>
+          <button class="btn-ghost" id="exportBtn">📤 JSON Export</button>
+          <button class="btn-ghost" id="importBtn">📥 JSON Import</button>
+          <button class="btn-danger" id="resetBtn">🧹 Zurücksetzen</button>
+        </div>
+        <div class="btn-row" style="margin-top:.5rem;border-top:1px solid #1f2937;padding-top:.6rem">
+          <span style="font-size:.75rem;color:#9ca3af;width:100%;margin-bottom:.2rem">📄 PDF Export</span>
+          <button class="btn-pdf" id="pdfRankBtn">📊 Rangliste als PDF</button>
+          <button class="btn-pdf" id="pdfScheduleBtn">📋 Spielplan als PDF</button>
+          <button class="btn-pdf" id="pdfAllBtn">📄 Alles als PDF</button>
+          <a href="vorlage.html" target="_blank" class="btn-ghost" style="font-size:.85rem;font-weight:600;text-decoration:none;padding:.45rem .85rem">🖨️ Vorlage drucken</a>
         </div>
         <div class="stats">
           <div class="stat"><span>Teilnehmer</span><strong id="statPlayers">0</strong></div>
@@ -175,34 +166,25 @@ Daria
       </article>
 
       <article class="card">
-        <div class="section-header">
-          <h2>Teilnehmer</h2>
-          <span id="playersInfo">Noch kein Turnier erzeugt.</span>
-        </div>
+        <div class="section-header"><h2>Teilnehmer</h2><span id="playersInfo">Noch kein Turnier erzeugt.</span></div>
         <div id="playersGrid" class="players-grid"></div>
       </article>
     </section>
 
     <section>
-      <article class="card">
-        <div class="section-header">
-          <h2>Rangliste</h2>
-          <span>Einzelwertung nach Punkten</span>
-        </div>
+      <article class="card" id="rankingSection">
+        <div class="section-header"><h2>Rangliste</h2><span>Einzelwertung nach Punkten</span></div>
         <div id="leaderboard"></div>
       </article>
-      <article class="card">
-        <div class="section-header">
-          <h2>Spielplan & Ergebnisse</h2>
-          <span>Americano-Doppel mit Einzelwertung</span>
-        </div>
+      <article class="card" id="scheduleSection">
+        <div class="section-header"><h2>Spielplan &amp; Ergebnisse</h2><span>Americano-Doppel mit Einzelwertung</span></div>
         <div id="schedule"></div>
       </article>
     </section>
   </main>
 
   <div class="monitor-toggle">
-    <button class="monitor-btn" id="monitorToggle" aria-label="Monitor-Modus aktivieren"><span class="dot"></span><span>Monitor-Modus</span></button>
+    <button class="monitor-btn" id="monitorToggle"><span class="dot"></span><span>Monitor-Modus</span></button>
   </div>
 
   <div class="monitor" id="monitor">
@@ -211,7 +193,7 @@ Daria
         <div style="font-size:.75rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.12em">Padel Americano</div>
         <div id="monitorTitle" style="font-size:1.25rem;font-weight:600;margin-top:.1rem">Turnier</div>
       </div>
-      <button class="btn-ghost" id="monitorClose" aria-label="Monitor-Modus schließen">Zurück</button>
+      <button class="btn-ghost" id="monitorClose">Zurück</button>
     </div>
     <div class="monitor-body">
       <section class="monitor-card">
@@ -226,44 +208,27 @@ Daria
   </div>
 
   <input type="file" id="fileInput" accept="application/json" hidden />
-
-  <footer>
-    <span>hAI Padel Americano · Static prototype · MIT Lizenz</span>
-  </footer>
+  <footer><span>hAI Padel Americano · Static prototype · MIT Lizenz · <a href="vorlage.html" target="_blank" style="color:#22c55e">🖨️ Druckvorlage</a></span></footer>
 
   <script>
     const THEME_KEY='hai_padel_theme';
     const state={name:'',points:24,roundsCount:5,players:[],rounds:[],mode:'points',timePerMatch:20,courts:2};
     const els={
-      tName:document.getElementById('tName'),
-      mode:document.getElementById('mode'),
-      points:document.getElementById('points'),
-      timePerMatch:document.getElementById('timePerMatch'),
-      timeField:document.getElementById('timeField'),
-      courts:document.getElementById('courts'),
-      rounds:document.getElementById('rounds'),
-      players:document.getElementById('players'),
-      generateBtn:document.getElementById('generateBtn'),
-      demoBtn:document.getElementById('demoBtn'),
-      exportBtn:document.getElementById('exportBtn'),
-      importBtn:document.getElementById('importBtn'),
-      resetBtn:document.getElementById('resetBtn'),
-      fileInput:document.getElementById('fileInput'),
-      statPlayers:document.getElementById('statPlayers'),
-      statRounds:document.getElementById('statRounds'),
-      statMatches:document.getElementById('statMatches'),
-      statOpen:document.getElementById('statOpen'),
-      playersGrid:document.getElementById('playersGrid'),
-      playersInfo:document.getElementById('playersInfo'),
-      leaderboard:document.getElementById('leaderboard'),
-      schedule:document.getElementById('schedule'),
-      monitorToggle:document.getElementById('monitorToggle'),
-      monitor:document.getElementById('monitor'),
-      monitorClose:document.getElementById('monitorClose'),
-      monitorTitle:document.getElementById('monitorTitle'),
-      monitorMatches:document.getElementById('monitorMatches'),
-      monitorLeaderboard:document.getElementById('monitorLeaderboard'),
-      themeToggle:document.getElementById('themeToggle')
+      tName:document.getElementById('tName'),mode:document.getElementById('mode'),points:document.getElementById('points'),
+      timePerMatch:document.getElementById('timePerMatch'),timeField:document.getElementById('timeField'),
+      courts:document.getElementById('courts'),rounds:document.getElementById('rounds'),players:document.getElementById('players'),
+      generateBtn:document.getElementById('generateBtn'),demoBtn:document.getElementById('demoBtn'),
+      exportBtn:document.getElementById('exportBtn'),importBtn:document.getElementById('importBtn'),
+      resetBtn:document.getElementById('resetBtn'),fileInput:document.getElementById('fileInput'),
+      statPlayers:document.getElementById('statPlayers'),statRounds:document.getElementById('statRounds'),
+      statMatches:document.getElementById('statMatches'),statOpen:document.getElementById('statOpen'),
+      playersGrid:document.getElementById('playersGrid'),playersInfo:document.getElementById('playersInfo'),
+      leaderboard:document.getElementById('leaderboard'),schedule:document.getElementById('schedule'),
+      monitorToggle:document.getElementById('monitorToggle'),monitor:document.getElementById('monitor'),
+      monitorClose:document.getElementById('monitorClose'),monitorTitle:document.getElementById('monitorTitle'),
+      monitorMatches:document.getElementById('monitorMatches'),monitorLeaderboard:document.getElementById('monitorLeaderboard'),
+      themeToggle:document.getElementById('themeToggle'),
+      pdfRankBtn:document.getElementById('pdfRankBtn'),pdfScheduleBtn:document.getElementById('pdfScheduleBtn'),pdfAllBtn:document.getElementById('pdfAllBtn')
     };
 
     function parseNames(raw){return raw.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);}
@@ -271,8 +236,7 @@ Daria
     function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
     function hasDuplicatePlayers(names){const seen=new Set();for(const name of names){const lower=name.toLowerCase().trim();if(seen.has(lower))return true;seen.add(lower);}return false;}
 
-    function genRounds(ids,count,courts){const rounds=[];const maxCourts=Math.max(1,Math.min(4,Number(courts)||1));for(let r=1;r<=count;r++){const pool=shuffle(ids);const round={index:r,matches:[],byeIds:[]};let available=[...pool];while(round.matches.length<maxCourts && available.length>=4){const a=available.shift();const b=available.shift();const c=available.shift();const d=available.shift();round.matches.push({court:round.matches.length+1,teamA:[a,b],teamB:[c,d],scoreA:'',scoreB:''});}
-        round.byeIds=available;rounds.push(round);}return rounds;}
+    function genRounds(ids,count,courts){const rounds=[];const maxCourts=Math.max(1,Math.min(4,Number(courts)||1));for(let r=1;r<=count;r++){const pool=shuffle(ids);const round={index:r,matches:[],byeIds:[]};let available=[...pool];while(round.matches.length<maxCourts&&available.length>=4){const a=available.shift(),b=available.shift(),c=available.shift(),d=available.shift();round.matches.push({court:round.matches.length+1,teamA:[a,b],teamB:[c,d],scoreA:'',scoreB:''});}round.byeIds=available;rounds.push(round);}return rounds;}
 
     function buildTournament(){const names=parseNames(els.players.value);if(names.length<4){alert('Bitte mindestens 4 Teilnehmer eintragen.');return;}if(hasDuplicatePlayers(names)){alert('Doppelte Spielernamen gefunden. Bitte eindeutige Namen verwenden.');return;}state.name=els.tName.value.trim()||'Padel Americano';state.mode=els.mode.value||'points';state.points=Number(els.points.value)||24;state.timePerMatch=Number(els.timePerMatch.value)||20;state.courts=Math.max(1,Math.min(4,Number(els.courts.value)||1));state.roundsCount=Math.max(1,Number(els.rounds.value)||5);state.players=createPlayers(names);const ids=state.players.map(p=>p.id);state.rounds=genRounds(ids,state.roundsCount,state.courts);recalc();renderAll();}
 
@@ -281,7 +245,6 @@ Daria
     function recalc(){state.players.forEach(p=>{p.matches=0;p.pointsFor=0;p.pointsAgainst=0;p.diff=0;});state.rounds.forEach(round=>{round.matches.forEach(m=>{const a=Number(m.scoreA),b=Number(m.scoreB);if(!Number.isFinite(a)||!Number.isFinite(b))return;[...m.teamA,...m.teamB].forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl)pl.matches++;});m.teamA.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=a;pl.pointsAgainst+=b;}});m.teamB.forEach(id=>{const pl=state.players.find(p=>p.id===id);if(pl){pl.pointsFor+=b;pl.pointsAgainst+=a;}});});});state.players.forEach(p=>{p.diff=p.pointsFor-p.pointsAgainst;});}
 
     function renderStats(){const total=state.rounds.reduce((s,r)=>s+r.matches.length,0);const open=state.rounds.reduce((s,r)=>s+r.matches.filter(m=>!(m.scoreA!==''&&m.scoreB!=='')).length,0);els.statPlayers.textContent=state.players.length;els.statRounds.textContent=state.rounds.length;els.statMatches.textContent=total;els.statOpen.textContent=open;}
-
     function playerName(id){return state.players.find(p=>p.id===id)?.name||'n/a';}
 
     function renderPlayers(){if(!state.players.length){els.playersInfo.textContent='Noch kein Turnier erzeugt.';els.playersGrid.innerHTML='<div class="empty">Nach der Erstellung erscheinen hier alle Teilnehmer.</div>';return;}const modeInfo=state.mode==='time'?state.timePerMatch+' min':state.mode==='points'?state.points+' Punkte':'freie Punkte';els.playersInfo.textContent=`${state.players.length} Spieler · ${state.rounds.length} Runden · ${state.courts} Courts · ${modeInfo}`;els.playersGrid.innerHTML=state.players.map(p=>`<div class="player-chip"><span>${escapeHtml(p.name)}</span><span>${p.matches} Sp.</span></div>`).join('');}
@@ -293,31 +256,41 @@ Daria
     function matchMeta(){if(state.mode==='points')return state.points+' Punkte';if(state.mode==='time')return state.timePerMatch+' min';return 'freie Punkte';}
 
     function renderSchedule(){if(!state.rounds.length){els.schedule.innerHTML='<div class="empty">Erzeuge zuerst einen Spielplan über "Americano generieren".</div>';return;}const maxAttr=state.mode==='points'?state.points:'';const autoHtml=state.mode==='points'?'<button type="button" class="btn-ghost" style="padding:.2rem .5rem;font-size:.7rem" data-auto-btn>Auto</button>':'';els.schedule.innerHTML=state.rounds.map(round=>{const matches=round.matches.map((m,i)=>`<div class="match" data-r="${round.index-1}" data-i="${i}"><div class="match-top"><span>Runde ${round.index} · Court ${m.court}</span><span>${matchMeta()}</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(m.teamA[0]))}</span><span>${escapeHtml(playerName(m.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${m.scoreA===''&&m.scoreB===''?'– : –':`${m.scoreA||0} : ${m.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(m.teamB[0]))}</span><span>${escapeHtml(playerName(m.teamB[1]))}</span></div></div><div class="score-inputs"><input type="number" min="0" max="${maxAttr}" value="${m.scoreA}" data-team="A" aria-label="Score Team A" /><input type="number" min="0" max="${maxAttr}" value="${m.scoreB}" data-team="B" aria-label="Score Team B" />${autoHtml}</div></div>`).join('');const bye=round.byeIds&&round.byeIds.length?`<div class="empty" style="margin-bottom:.35rem">Pause: ${round.byeIds.map(playerName).map(escapeHtml).join(', ')}</div>`:'';return`<section class="schedule-round">${bye}<div class="match-grid">${matches}</div></section>`;}).join('');}
-    
-    function setupScheduleListeners(){els.schedule.addEventListener('input',e=>{if(e.target.tagName!=='INPUT'||!e.target.dataset.team)return;const card=e.target.closest('.match');if(!card)return;const r=Number(card.dataset.r),i=Number(card.dataset.i);if(!Number.isFinite(r)||!Number.isFinite(i))return;const t=e.target.dataset.team;const val=e.target.value===''?'':Number(e.target.value);if(Number.isFinite(val)&&val<0){e.target.value='';return;}const m=state.rounds[r]?.matches[i];if(!m)return;if(t==='A')m.scoreA=val;else m.scoreB=val;recalc();renderStats();renderLeaderboard();renderMonitor();});els.schedule.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON'||!e.target.hasAttribute('data-auto-btn'))return;const card=e.target.closest('.match');if(!card)return;const r=Number(card.dataset.r),i=Number(card.dataset.i);if(!Number.isFinite(r)||!Number.isFinite(i))return;if(state.mode!=='points'){alert('Auto-Verteilung ist nur im Modus "Punkte bis Ziel" verfügbar.');return;}const m=state.rounds[r]?.matches[i];if(!m)return;const a=Number(m.scoreA),b=Number(m.scoreB);if(Number.isFinite(a)&&!Number.isFinite(b))m.scoreB=Math.max(0,state.points-a);else if(Number.isFinite(b)&&!Number.isFinite(a))m.scoreA=Math.max(0,state.points-b);else{alert('Bitte zunächst Punkte für Team A oder B eintragen.');return;}recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});}
 
-    function renderMonitor(){els.monitorTitle.textContent=state.name||'Padel Americano';const all=[];state.rounds.forEach(round=>{round.matches.forEach(m=>{const done=m.scoreA!==''&&m.scoreB!=='';all.push({round:round.index,match:m,done});});});const upcoming=all.filter(x=>!x.done).slice(0,10);if(!upcoming.length){els.monitorMatches.innerHTML='<div class="empty">Alle Matches sind eingetragen.</div>';}else{els.monitorMatches.innerHTML=upcoming.map(x=>`<div class="match" style="margin-bottom:.3rem"><div class="match-top"><span>Runde ${x.round} · Court ${x.match.court}</span><span>${matchMeta()}</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(x.match.teamA[0]))}</span><span>${escapeHtml(playerName(x.match.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${x.match.scoreA===''&&x.match.scoreB===''?'– : –':`${x.match.scoreA||0} : ${x.match.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(x.match.teamB[0]))}</span><span>${escapeHtml(playerName(x.match.teamB[1]))}</span></div></div></div>`).join('');}
-      const rows=sortedPlayers().slice(0,12).map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.monitorLeaderboard.innerHTML=rows?`<table><thead><tr><th>#</th><th>Spieler</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">Noch keine Spieler.</div>';}
+    function setupScheduleListeners(){els.schedule.addEventListener('input',e=>{if(e.target.tagName!=='INPUT'||!e.target.dataset.team)return;const card=e.target.closest('.match');if(!card)return;const r=Number(card.dataset.r),i=Number(card.dataset.i);if(!Number.isFinite(r)||!Number.isFinite(i))return;const t=e.target.dataset.team;const val=e.target.value===''?'':Number(e.target.value);if(Number.isFinite(val)&&val<0){e.target.value='';return;}const m=state.rounds[r]?.matches[i];if(!m)return;if(t==='A')m.scoreA=val;else m.scoreB=val;recalc();renderStats();renderLeaderboard();renderMonitor();});els.schedule.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON'||!e.target.hasAttribute('data-auto-btn'))return;const card=e.target.closest('.match');if(!card)return;const r=Number(card.dataset.r),i=Number(card.dataset.i);if(!Number.isFinite(r)||!Number.isFinite(i))return;const m=state.rounds[r]?.matches[i];if(!m)return;const a=Number(m.scoreA),b=Number(m.scoreB);if(Number.isFinite(a)&&!Number.isFinite(b))m.scoreB=Math.max(0,state.points-a);else if(Number.isFinite(b)&&!Number.isFinite(a))m.scoreA=Math.max(0,state.points-b);else{alert('Bitte zunächst Punkte für Team A oder B eintragen.');return;}recalc();renderStats();renderLeaderboard();renderMonitor();renderSchedule();});}
+
+    function renderMonitor(){els.monitorTitle.textContent=state.name||'Padel Americano';const all=[];state.rounds.forEach(round=>{round.matches.forEach(m=>{const done=m.scoreA!==''&&m.scoreB!=='';all.push({round:round.index,match:m,done});});});const upcoming=all.filter(x=>!x.done).slice(0,10);if(!upcoming.length){els.monitorMatches.innerHTML='<div class="empty">Alle Matches sind eingetragen.</div>';}else{els.monitorMatches.innerHTML=upcoming.map(x=>`<div class="match" style="margin-bottom:.3rem"><div class="match-top"><span>Runde ${x.round} · Court ${x.match.court}</span><span>${matchMeta()}</span></div><div class="teams"><div class="team"><span>${escapeHtml(playerName(x.match.teamA[0]))}</span><span>${escapeHtml(playerName(x.match.teamA[1]))}</span></div><div class="team"><span style="font-weight:700;text-align:center;display:block">${x.match.scoreA===''&&x.match.scoreB===''?'– : –':`${x.match.scoreA||0} : ${x.match.scoreB||0}`}</span></div><div class="team"><span>${escapeHtml(playerName(x.match.teamB[0]))}</span><span>${escapeHtml(playerName(x.match.teamB[1]))}</span></div></div></div>`).join('');}const rows=sortedPlayers().slice(0,12).map((p,i)=>`<tr><td><span class="rank">${i+1}</span></td><td>${escapeHtml(p.name)}</td><td>${p.pointsFor}</td><td>${signed(p.diff)}</td></tr>`).join('');els.monitorLeaderboard.innerHTML=rows?`<table><thead><tr><th>#</th><th>Spieler</th><th>Punkte</th><th>Diff</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">Noch keine Spieler.</div>';}
 
     function renderAll(){renderStats();renderPlayers();renderLeaderboard();renderSchedule();renderMonitor();setupScheduleListeners();}
 
-    function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]||c));}
+    function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]||c));}
     function signed(v){if(!Number.isFinite(v))return'0';return v>0?`+${v}`:String(v);}
+
+    function doPrint(mode){
+      if(!state.players.length){alert('Bitte zuerst ein Turnier erstellen.');return;}
+      document.body.setAttribute('data-print',mode);
+      // inject print title
+      let el=document.getElementById('printHeader');
+      if(!el){el=document.createElement('div');el.id='printHeader';el.className='print-only';el.style.cssText='font-size:16pt;font-weight:700;margin-bottom:.5rem;';document.querySelector('main').prepend(el);}
+      const modeLabel={'ranking':'Rangliste','schedule':'Spielplan','all':'Rangliste & Spielplan'}[mode]||'';
+      el.textContent=`${state.name||'Padel Americano'} · ${modeLabel} · ${new Date().toLocaleDateString('de-DE')}`;
+      window.print();
+      document.body.removeAttribute('data-print');
+    }
 
     function doExport(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=(state.name||'padel-americano').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.json';a.click();URL.revokeObjectURL(url);}
 
-    function doImport(file){const MAX_FILE_SIZE=1024*1024;if(file.size>MAX_FILE_SIZE){alert('Datei ist zu groß (max. 1 MB).');return;}const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!data||typeof data!=='object'){throw new Error('Invalid JSON structure');}const importedPlayers=Array.isArray(data.players)?data.players:[];if(importedPlayers.length<4){throw new Error('Mindestens 4 Spieler erforderlich.');}Object.assign(state,{name:data.name||'Padel Americano',points:Number(data.points||24),roundsCount:Number(data.roundsCount||data.rounds?.length||5),players:importedPlayers,rounds:Array.isArray(data.rounds)?data.rounds:[]});state.mode=data.mode||'points';state.timePerMatch=Number(data.timePerMatch||20);state.courts=Math.max(1,Math.min(4,Number(data.courts||2)));els.tName.value=state.name;els.points.value=String(state.points);els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');els.mode.value=state.mode;els.timePerMatch.value=String(state.timePerMatch);els.courts.value=String(state.courts);updateModeUi();recalc();renderAll();}catch(e){alert('Fehler beim Importieren: '+e.message);}};reader.readAsText(file);}
+    function doImport(file){const MAX=1024*1024;if(file.size>MAX){alert('Datei zu groß (max. 1 MB).');return;}const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!data||typeof data!=='object')throw new Error('Ungültige JSON-Struktur');const importedPlayers=Array.isArray(data.players)?data.players:[];if(importedPlayers.length<4)throw new Error('Mindestens 4 Spieler erforderlich.');Object.assign(state,{name:data.name||'Padel Americano',points:Number(data.points||24),roundsCount:Number(data.roundsCount||data.rounds?.length||5),players:importedPlayers,rounds:Array.isArray(data.rounds)?data.rounds:[]});state.mode=data.mode||'points';state.timePerMatch=Number(data.timePerMatch||20);state.courts=Math.max(1,Math.min(4,Number(data.courts||2)));els.tName.value=state.name;els.points.value=String(state.points);els.rounds.value=String(state.roundsCount);els.players.value=state.players.map(p=>p.name).join('\n');els.mode.value=state.mode;els.timePerMatch.value=String(state.timePerMatch);els.courts.value=String(state.courts);updateModeUi();recalc();renderAll();}catch(e){alert('Fehler beim Importieren: '+e.message);}};reader.readAsText(file);}
 
-    function loadDemo(){els.tName.value='Friday Night Demo';els.mode.value='points';els.points.value='24';els.timePerMatch.value='20';els.courts.value='2';els.rounds.value='5';els.players.value=['Anna','Ben','Chris','Daria','Emir','Fiona','Gustav','Hanna'].join('\n');updateModeUi();buildTournament();if(state.rounds[0]?.matches[0]){state.rounds[0].matches[0].scoreA=14;state.rounds[0].matches[0].scoreB=10;}if(state.rounds[0]?.matches[1]){state.rounds[0].matches[1].scoreA=11;state.rounds[0].matches[1].scoreB=13;}recalc();renderAll();}
+    function loadDemo(){els.tName.value='Friday Night Demo';els.mode.value='points';els.points.value='24';els.courts.value='2';els.rounds.value='5';els.players.value=['Anna','Ben','Chris','Daria','Emir','Fiona','Gustav','Hanna'].join('\n');updateModeUi();buildTournament();if(state.rounds[0]?.matches[0]){state.rounds[0].matches[0].scoreA=14;state.rounds[0].matches[0].scoreB=10;}if(state.rounds[0]?.matches[1]){state.rounds[0].matches[1].scoreA=11;state.rounds[0].matches[1].scoreB=13;}recalc();renderAll();}
 
-    function updateModeUi(){if(els.timeField){els.timeField.style.display=els.mode.value==='time'?'block':'none';}}
+    function updateModeUi(){if(els.timeField)els.timeField.style.display=els.mode.value==='time'?'block':'none';}
 
-    function applyTheme(theme){const t=theme==='light'?'light':'dark';document.body.classList.toggle('light',t==='light');localStorage.setItem(THEME_KEY,t);if(els.themeToggle){els.themeToggle.textContent=t==='light'?'🌙 Dunkel':'☀️ Hell';}}
+    function applyTheme(theme){const t=theme==='light'?'light':'dark';document.body.classList.toggle('light',t==='light');localStorage.setItem(THEME_KEY,t);if(els.themeToggle)els.themeToggle.textContent=t==='light'?'🌙 Dunkel':'☀️ Hell';}
 
-    (function initTheme(){const stored=localStorage.getItem(THEME_KEY);const prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches;const initial=stored|| (prefers?'light':'dark');applyTheme(initial);}());
+    (function initTheme(){const stored=localStorage.getItem(THEME_KEY);const prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches;applyTheme(stored||(prefers?'light':'dark'));}());
 
-    els.themeToggle.addEventListener('click',()=>{const current=document.body.classList.contains('light')?'light':'dark';applyTheme(current==='light'?'dark':'light');});
-
+    els.themeToggle.addEventListener('click',()=>{applyTheme(document.body.classList.contains('light')?'dark':'light');});
     els.generateBtn.addEventListener('click',buildTournament);
     els.resetBtn.addEventListener('click',resetAll);
     els.exportBtn.addEventListener('click',doExport);
@@ -325,11 +298,12 @@ Daria
     els.fileInput.addEventListener('change',e=>{if(e.target.files[0])doImport(e.target.files[0]);});
     els.demoBtn.addEventListener('click',loadDemo);
     els.mode.addEventListener('change',updateModeUi);
-
-    els.monitorToggle.addEventListener('click',()=>{els.monitor.classList.add('active');});
-    els.monitorClose.addEventListener('click',()=>{els.monitor.classList.remove('active');});
+    els.pdfRankBtn.addEventListener('click',()=>doPrint('ranking'));
+    els.pdfScheduleBtn.addEventListener('click',()=>doPrint('schedule'));
+    els.pdfAllBtn.addEventListener('click',()=>doPrint('all'));
+    els.monitorToggle.addEventListener('click',()=>els.monitor.classList.add('active'));
+    els.monitorClose.addEventListener('click',()=>els.monitor.classList.remove('active'));
     document.addEventListener('keydown',e=>{if(e.key==='Escape')els.monitor.classList.remove('active');});
-
     updateModeUi();
     renderAll();
   </script>
