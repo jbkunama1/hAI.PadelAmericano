@@ -1,5 +1,9 @@
 # hAI Padel Americano 🎾🧠
 
+<a href="https://www.buymeacoffee.com/highfish">
+<img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
+</a>
+
 > Ein schlanker Turnier-Manager für **Padel Americano** – ideal für Vereine, Schulen und Freundeskreise.
 
 <div align="center">
@@ -233,3 +237,4 @@ docker compose up -d
 Dieses Projekt steht unter der **MIT-Lizenz** – Nutzung, Veränderung und Weitergabe sind frei erlaubt, solange Urheberrechtshinweis und Lizenztext erhalten bleiben.
 
 Der vollständige Lizenztext befindet sich in der Datei `LICENSE`.
+
